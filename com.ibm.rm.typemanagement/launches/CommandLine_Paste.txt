@@ -1,0 +1,11 @@
+Usage Example
+java -jar tsm.jar -command exportConfigurations -url https://clm.example.com:9443/rm -user ralph -password ralph -project "GC JKE Banking (Requirements Management)" -csvfile "../exporttest.csv" -csvDelimiter ";"
+java -jar tsm.jar -command exportConfigurationsByTag  -url https://clm.example.com:9443/rm -user ralph -password ralph -project "GC JKE Banking (Requirements Management)" -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile "../exporttest.csv" -csvDelimiter ";"
+java -jar tsm.jar -command importTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ralph -csvfile "../TypeSystemImport.csv" -csvDelimiter ";"
+java -jar tsm.jar -command deliverTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ralph -csvfile "../TypeSystemMassDelivery.csv" -csvDelimiter ";"
+
+-command exportConfigurations -url https://clm.example.com:9443/rm -user ralph -password ralph -project "GC JKE Banking (Requirements Management)" -csvfile "../exporttest.csv" -csvDelimiter ";"
+-command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ralph -project "GC JKE Banking (Requirements Management)" -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile "../exporttest.csv" -csvDelimiter ";"
+-command exportAllConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ralph -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile "../exporttest.csv" -csvDelimiter ";"
+-command importTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ralph -csvfile "../TypeSystemImport.csv" -csvDelimiter ";"
+-command deliverTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ralph -csvfile "../TypeSystemMassDelivery.csv" -csvDelimiter ";"

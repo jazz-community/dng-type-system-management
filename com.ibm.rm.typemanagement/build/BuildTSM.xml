@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><project default="create_run_jar" name="Create Runnable Jar for Project com.ibm.rm.typemanagement with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR file Export Wizard-->
+    <!--ANT 1.7 is required-->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/RTC606Dev/workspaces/Dev5_CM/ClientWs"/>
+    <property name="dir.jarfile" value="C:/temp/TSM"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/tsm.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagement"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ slf4j-api-1.7.25.jar slf4j-log4j12-1.7.25.jar log4j-1.2.17.jar wink-client-1.4.jar wink-common-1.4.jar geronimo-jaxrs_1.1_spec-1.0.jar geronimo-annotation_1.1_spec-1.0.jar jaxb-api-2.2.jar stax-api-1.0-2.jar jaxb-impl-2.2.1.1.jar activation-1.1.jar commons-cli-1.2.jar oslc-java-client-2.4.0.jar jena-tdb-3.6.0.jar jena-arq-3.6.0.jar jena-core-3.6.0.jar jena-iri-3.6.0.jar jena-base-3.6.0.jar commons-csv-1.5.jar collection-0.7.jar jena-shaded-guava-3.6.0.jar jsonld-java-0.11.1.jar jackson-core-2.9.0.jar jackson-databind-2.9.0.jar jackson-annotations-2.9.0.jar httpclient-cache-4.5.3.jar libthrift-0.10.0.jar jcl-over-slf4j-1.7.25.jar jena-tdb2-3.6.0.jar jena-dboe-trans-data-3.6.0.jar jena-dboe-transaction-3.6.0.jar jena-dboe-base-3.6.0.jar jena-dboe-index-3.6.0.jar jena-rdfconnection-3.6.0.jar oauth-20100527.jar oauth-consumer-20100527.jar oauth-httpclient4-20090913.jar wink-client-apache-httpclient-1.4.jar oslc4j-core-2.4.0.jar assertj-core-3.8.0.jar oslc4j-jena-provider-2.4.0.jar oslc4j-json4j-provider-2.4.0.jar wink-json4j-1.2.1-incubating.jar httpcore-4.4.5.jar httpclient-4.5.2.jar commons-logging-1.2.jar commons-codec-1.9.jar xercesImpl-2.8.0.jar javax.servlet-api-3.1.0.jar jsr311-api-1.1.1.jar commons-io-1.3.2.jar xml-apis-1.4.01.jar javax.json-1.1.2.jar javax.json-api-1.1.2.jar opencsv-4.2.jar commons-lang3-3.7.jar commons-text-1.3.jar commons-beanutils-1.9.3.jar commons-collections-3.2.2.jar commons-collections4-4.1.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="C:/Users/RalphSchoon/git/dng_schema_management/com.ibm.rm.typemanagement/target/classes"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/slf4j/slf4j-api/1.7.25" includes="slf4j-api-1.7.25.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/slf4j/slf4j-log4j12/1.7.25" includes="slf4j-log4j12-1.7.25.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/log4j/log4j/1.2.17" includes="log4j-1.2.17.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/wink/wink-client/1.4" includes="wink-client-1.4.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/wink/wink-common/1.4" includes="wink-common-1.4.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/geronimo/specs/geronimo-jaxrs_1.1_spec/1.0" includes="geronimo-jaxrs_1.1_spec-1.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/geronimo/specs/geronimo-annotation_1.1_spec/1.0" includes="geronimo-annotation_1.1_spec-1.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/xml/bind/jaxb-api/2.2" includes="jaxb-api-2.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/xml/stream/stax-api/1.0-2" includes="stax-api-1.0-2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.1.1" includes="jaxb-impl-2.2.1.1.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/activation/activation/1.1" includes="activation-1.1.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-cli/commons-cli/1.2" includes="commons-cli-1.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/eclipse/lyo/clients/oslc-java-client/2.4.0" includes="oslc-java-client-2.4.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-tdb/3.6.0" includes="jena-tdb-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-arq/3.6.0" includes="jena-arq-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-core/3.6.0" includes="jena-core-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-iri/3.6.0" includes="jena-iri-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-base/3.6.0" includes="jena-base-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/commons/commons-csv/1.5" includes="commons-csv-1.5.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/github/andrewoma/dexx/collection/0.7" includes="collection-0.7.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-shaded-guava/3.6.0" includes="jena-shaded-guava-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/github/jsonld-java/jsonld-java/0.11.1" includes="jsonld-java-0.11.1.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.9.0" includes="jackson-core-2.9.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.9.0" includes="jackson-databind-2.9.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.9.0" includes="jackson-annotations-2.9.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.3" includes="httpclient-cache-4.5.3.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/thrift/libthrift/0.10.0" includes="libthrift-0.10.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.25" includes="jcl-over-slf4j-1.7.25.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-tdb2/3.6.0" includes="jena-tdb2-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-dboe-trans-data/3.6.0" includes="jena-dboe-trans-data-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-dboe-transaction/3.6.0" includes="jena-dboe-transaction-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-dboe-base/3.6.0" includes="jena-dboe-base-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-dboe-index/3.6.0" includes="jena-dboe-index-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/jena/jena-rdfconnection/3.6.0" includes="jena-rdfconnection-3.6.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/net/oauth/core/oauth/20100527" includes="oauth-20100527.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/net/oauth/core/oauth-consumer/20100527" includes="oauth-consumer-20100527.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/net/oauth/core/oauth-httpclient4/20090913" includes="oauth-httpclient4-20090913.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/wink/wink-client-apache-httpclient/1.4" includes="wink-client-apache-httpclient-1.4.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/eclipse/lyo/oslc4j/core/oslc4j-core/2.4.0" includes="oslc4j-core-2.4.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/assertj/assertj-core/3.8.0" includes="assertj-core-3.8.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/eclipse/lyo/oslc4j/core/oslc4j-jena-provider/2.4.0" includes="oslc4j-jena-provider-2.4.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/eclipse/lyo/oslc4j/core/oslc4j-json4j-provider/2.4.0" includes="oslc4j-json4j-provider-2.4.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/wink/wink-json4j/1.2.1-incubating" includes="wink-json4j-1.2.1-incubating.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/httpcomponents/httpcore/4.4.5" includes="httpcore-4.4.5.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/httpcomponents/httpclient/4.5.2" includes="httpclient-4.5.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-logging/commons-logging/1.2" includes="commons-logging-1.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-codec/commons-codec/1.9" includes="commons-codec-1.9.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/xerces/xercesImpl/2.8.0" includes="xercesImpl-2.8.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/servlet/javax.servlet-api/3.1.0" includes="javax.servlet-api-3.1.0.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/ws/rs/jsr311-api/1.1.1" includes="jsr311-api-1.1.1.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-io/commons-io/1.3.2" includes="commons-io-1.3.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/xml-apis/xml-apis/1.4.01" includes="xml-apis-1.4.01.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/glassfish/javax.json/1.1.2" includes="javax.json-1.1.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/javax/json/javax.json-api/1.1.2" includes="javax.json-api-1.1.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/com/opencsv/opencsv/4.2" includes="opencsv-4.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/commons/commons-lang3/3.7" includes="commons-lang3-3.7.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/commons/commons-text/1.3" includes="commons-text-1.3.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-beanutils/commons-beanutils/1.9.3" includes="commons-beanutils-1.9.3.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/commons-collections/commons-collections/3.2.2" includes="commons-collections-3.2.2.jar"/>
+            <zipfileset dir="C:/Users/RalphSchoon/.m2/repository/org/apache/commons/commons-collections4/4.1" includes="commons-collections4-4.1.jar"/>
+        </jar>
+    </target>
+</project>
