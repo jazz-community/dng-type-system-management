@@ -1,4 +1,4 @@
-# dng_schema_management
+# dng-type-system-management
 
 Commandline tool to support managing Doors Next Type Systems.
 
