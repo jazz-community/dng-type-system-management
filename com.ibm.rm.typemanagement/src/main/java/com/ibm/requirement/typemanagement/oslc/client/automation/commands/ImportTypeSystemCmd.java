@@ -192,7 +192,7 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 						totalResult &= operationResult;
 						logger.info("The delivery has failed or there were no differences to deliver!");
 						Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
-						logger.error("Failed to deliver change set '{}' to stream. '{}'. changeset deleted: '{}'",
+						logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
 								changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
 								deleted.toString());
 						continue;
