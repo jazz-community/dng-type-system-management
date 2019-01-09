@@ -1,6 +1,6 @@
 # dng-type-system-management
 
-Commandline tool to support managing Doors Next Type Systems.
+Command line tool to support managing Doors Next Type Systems.
 
 Provides a conmmand **exportConfigurations** to export the streams/configurations for components of a project area as target into a source to target mapping CSV file.
 
