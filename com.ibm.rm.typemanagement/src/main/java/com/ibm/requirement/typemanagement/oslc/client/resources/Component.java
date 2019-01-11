@@ -76,7 +76,7 @@ public class Component extends AbstractResource {
 		this.accessContext = accessContext;
 	}
 	
-	@OslcDescription("A name for the task, typically to indicate what the task is doing.")
+	@OslcDescription("A name for the component.")
 	@OslcTitle("Title")
 	@OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + DngTypeSystemManagementConstants.DC_PROPERTY_NAME_TITLE)
 	@OslcReadOnly
