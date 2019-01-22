@@ -23,11 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
-
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -47,7 +42,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.RDFUtils;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.TimeStampUtil;
 import com.ibm.requirement.typemanagement.oslc.client.resources.Changeset;
 import com.ibm.requirement.typemanagement.oslc.client.resources.Component;
 import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
@@ -596,11 +590,6 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Do not use.
-	 * 
-	 * This is an internal API that is not officially supported. Use of this API is
-	 * unsupported and the API can change any time without notice.
-	 * 
 	 * Discard a change set.
 	 * 
 	 * @param client
@@ -616,71 +605,39 @@ public class DngCmUtil {
 			logger.info("Changeset must not be null");
 			return false;
 		}
-		return discardChangeSet(client, changeSet.getAbout().toString(), changeSet.getOverrides().toString());
+		return discardChangeSet(client, changeSet.getAbout().toString());
 	}
 
 	/**
-	 * Do not use.
-	 * 
-	 * This is an internal API that is not officially supported. Use of this API is
-	 * unsupported and the API can change any time without notice.
-	 * 
 	 * Discard a change set.
 	 * 
 	 * @param client
-	 * @param changeset
-	 * @param context
 	 * @return
 	 */
-	public static boolean discardChangeSet(final JazzFormAuthClient client, final String changeset,
-			final String context) {
+	public static boolean discardChangeSet(final JazzFormAuthClient client, final String changeset) {
 
 		boolean result = false;
 		if (changeset == null) {
 			logger.info("Change set must not be null");
 			return false;
 		}
-		if (context == null) {
-			logger.info("Context set must not be null");
-			return false;
-		}
-
-		final String changesetDiscardFactotryURL = getChangeSetDiscardFactory(client);
-
-		// Create JSON object for discard factory
-		JsonObject changeSet = Json.createObjectBuilder().add("configurationId", changeset).build();
-
-		HashMap<String, String> addHeader = new HashMap<String, String>();
-
-		addHeader.put("Content-Type", "text/plain");
-		addHeader.put("Accept", "*/*");
-		addHeader.put(DngTypeSystemManagementConstants.DNG_CM_CONFIGURATION_CONTEXT_HEADER, context);
 
 		logger.debug("DiscardChangeSet");
-		logger.trace("CreateChangeSet using factory '{}'", changesetDiscardFactotryURL);
-		logger.trace("Json '{}'", changeSet.toString());
-
-		DngHeaderRequestInterceptor.installRequestInterceptor(client, addHeader);
 		ClientResponse response = null;
 		try {
-			response = client.createResource(changesetDiscardFactotryURL, changeSet.toString(),
-					OslcMediaType.APPLICATION_JSON);
-			DngHeaderRequestInterceptor.removeRequestInterceptor(client);
+			response = client.deleteResource(changeset);
 			logger.debug("Status: " + response.getStatusCode());
-			// logger.info("Response: " + RDFUtils.getRawResponse(response));
 			/**
 			 * 
 			 * Behavior of POST
 			 * 
-			 * 200 discarded. Response body contains OK
+			 * 200 discarded.
 			 *
 			 * 
 			 */
 			switch (response.getStatusCode()) {
 			case 200:
-				if ("OK".endsWith(RDFUtils.getRawResponse(response))) {
-					result = true;
-				}
+				result = true;
 				logger.debug("Result '{}'.", result);
 				break;
 			default:
@@ -697,5 +654,4 @@ public class DngCmUtil {
 		}
 		return result;
 	}
-
 }

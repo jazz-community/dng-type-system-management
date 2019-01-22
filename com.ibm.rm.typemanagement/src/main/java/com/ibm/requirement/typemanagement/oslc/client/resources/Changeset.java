@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.TimeStampUtil;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngHeaderRequestInterceptor;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.IRequestTracker;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.RequestTrackerImpl;
@@ -122,7 +123,7 @@ public class Changeset extends AbstractResource {
 	/**
 	 * @return The URI for the creation factory
 	 */
-	public URI getChangeSetFactory() {
+	private URI getChangeSetFactory() {
 		return changeSetFactory;
 	}
 
@@ -131,7 +132,7 @@ public class Changeset extends AbstractResource {
 	 * 
 	 * @param changeSetFactory
 	 */
-	public void setChangeSetFactory(URI changeSetFactory) {
+	private void setChangeSetFactory(URI changeSetFactory) {
 		this.changeSetFactory = changeSetFactory;
 	}
 
@@ -143,7 +144,7 @@ public class Changeset extends AbstractResource {
 	 * @param target
 	 * @throws URISyntaxException
 	 */
-	public void initialize(String title, String description, Configuration target) throws URISyntaxException {
+	private void initialize(String title, String description, Configuration target) throws URISyntaxException {
 		initialize(title, description, target.getComponent(), target.getAbout(), target.getChangesets());
 	}
 
@@ -157,7 +158,7 @@ public class Changeset extends AbstractResource {
 	 * @param changesetFactory The change set creation factory
 	 * @throws URISyntaxException
 	 */
-	public void initialize(String title, String description, URI component, URI targetStream, URI changesetFactory)
+	private void initialize(String title, String description, URI component, URI targetStream, URI changesetFactory)
 			throws URISyntaxException {
 		if (title == null) {
 			title = "No Title " + TimeStampUtil.getTimestamp();
@@ -214,6 +215,21 @@ public class Changeset extends AbstractResource {
 			final Configuration target) throws IOException, OAuthException, URISyntaxException {
 		super(null);
 		create(client, title, description, target);
+	}
+
+	/**
+	 * For convenience
+	 * 
+	 * @param client
+	 * @return
+	 */
+	public boolean discard(final JazzFormAuthClient client) {
+		URI uri = this.getAbout();
+		if(uri==null) {
+			logger.info("Change set URI must not be null");	
+			return false;
+		}
+		return DngCmUtil.discardChangeSet(client, this.getAbout().toString());
 	}
 
 	public static final Logger logger = LoggerFactory.getLogger(Changeset.class);
@@ -389,4 +405,5 @@ public class Changeset extends AbstractResource {
 		}
 		return null;
 	}
+	
 }
