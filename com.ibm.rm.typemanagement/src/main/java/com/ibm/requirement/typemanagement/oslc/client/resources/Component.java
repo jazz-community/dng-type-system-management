@@ -75,7 +75,7 @@ public class Component extends AbstractResource {
 	public void setAccessContext(URI accessContext) {
 		this.accessContext = accessContext;
 	}
-	
+
 	@OslcDescription("A name for the component.")
 	@OslcTitle("Title")
 	@OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + DngTypeSystemManagementConstants.DC_PROPERTY_NAME_TITLE)
@@ -103,7 +103,7 @@ public class Component extends AbstractResource {
 	public URI getConfigurations() {
 		return configurations;
 	}
-	
+
 	@OslcDescription("Project area process.")
 	@OslcTitle("Projectarea")
 	@OslcPropertyDefinition(DngTypeSystemManagementConstants.PROCESS_NAMESPACE
@@ -115,8 +115,7 @@ public class Component extends AbstractResource {
 
 	@OslcDescription("Access context.")
 	@OslcTitle("Projectarea")
-	@OslcPropertyDefinition(DngTypeSystemManagementConstants.CORE_ACCESS_CONTEXT_NAMESPACE
-			+ "accessContext")
+	@OslcPropertyDefinition(DngTypeSystemManagementConstants.CORE_ACCESS_CONTEXT_NAMESPACE + "accessContext")
 	@OslcReadOnly
 	public URI getAccessContext() {
 		return accessContext;

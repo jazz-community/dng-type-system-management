@@ -410,7 +410,7 @@ public class DngCmDeliverySession extends AbstractResource {
 		String tracker = null;
 		String sessionURI = this.getAbout().toString();
 
-		//LoggingUtil.setLoggingLevel(LoggingUtil.INFO);
+		// LoggingUtil.setLoggingLevel(LoggingUtil.INFO);
 		logger.debug("Update session: " + sessionURI);
 
 		ClientResponse response = null;

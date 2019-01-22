@@ -139,7 +139,7 @@ public class ExportConfigurationsByDescription extends AbstractCommand {
 	public boolean execute() {
 
 		boolean result = false;
-		
+
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
@@ -151,7 +151,7 @@ public class ExportConfigurationsByDescription extends AbstractCommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		try {
-			
+
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
@@ -162,7 +162,7 @@ public class ExportConfigurationsByDescription extends AbstractCommand {
 				// Get rootservices
 				String catalogUrl = helper.getCatalogUrl();
 				logger.info("Getting Configurations");
-				
+
 				// Get the OSLC CM Service Provider
 				String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 				if (cmCatalogUrl == null) {
@@ -170,15 +170,16 @@ public class ExportConfigurationsByDescription extends AbstractCommand {
 							webContextUrl);
 					return result;
 				}
-				
-				// Find the OSLC service provider for the project area - assuming the project area is CM enabled
+
+				// Find the OSLC service provider for the project area - assuming the project
+				// area is CM enabled
 				final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 						.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 				if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
 					logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 					return result;
 				}
-				
+
 				// Get the components and the configurations for the components
 				Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
 						rmProjectAreaOslcServiceProvider.getProjectAreaId());

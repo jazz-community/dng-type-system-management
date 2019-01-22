@@ -100,7 +100,7 @@ public class DngCmTypeSystemImportSession extends AbstractResource {
 			logger.info("Source must not be null");
 			return result;
 		}
-		
+
 		DngCmTypeSystemImportSession typeImportSession = new DngCmTypeSystemImportSession();
 		typeImportSession.setSource(source.getAbout());
 		typeImportSession.setTarget(target.getAbout());

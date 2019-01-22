@@ -122,7 +122,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 	@Override
 	public boolean execute() {
 		boolean result = false;
-		
+
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
@@ -150,7 +150,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 							webContextUrl);
 					return result;
 				}
-				
+
 				final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 						.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 				if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
@@ -165,7 +165,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 				logger.info("Filtering for Streams");
 				List<CsvExportImportInformation> configurationList = getStreams(configurations, projectAreaName);
 
-				// export the data				
+				// export the data
 				CsvUtil csv = new CsvUtil();
 				if (null != csvDelimiter && csvDelimiter != "") {
 					csv.setSeperator(csvDelimiter.charAt(0));

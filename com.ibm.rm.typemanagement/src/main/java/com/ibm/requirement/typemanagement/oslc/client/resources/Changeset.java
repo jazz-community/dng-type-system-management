@@ -225,8 +225,8 @@ public class Changeset extends AbstractResource {
 	 */
 	public boolean discard(final JazzFormAuthClient client) {
 		URI uri = this.getAbout();
-		if(uri==null) {
-			logger.info("Change set URI must not be null");	
+		if (uri == null) {
+			logger.info("Change set URI must not be null");
 			return false;
 		}
 		return DngCmUtil.discardChangeSet(client, this.getAbout().toString());
@@ -405,5 +405,5 @@ public class Changeset extends AbstractResource {
 		}
 		return null;
 	}
-	
+
 }
