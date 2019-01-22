@@ -575,21 +575,6 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Do not use.
-	 * 
-	 * This is an internal API that is not officially supported. Use of this API is
-	 * unsupported and the API can change any time without notice.
-	 * 
-	 * Get the URL to discard change sets
-	 * 
-	 * @param client
-	 * @return
-	 */
-	public static String getChangeSetDiscardFactory(JazzFormAuthClient client) {
-		return client.getUrl() + "/localVersioning/configurations/changesets/discard";
-	}
-
-	/**
 	 * Discard a change set.
 	 * 
 	 * @param client
