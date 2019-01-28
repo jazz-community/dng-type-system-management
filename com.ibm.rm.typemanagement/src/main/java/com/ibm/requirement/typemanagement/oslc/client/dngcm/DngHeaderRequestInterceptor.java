@@ -94,6 +94,10 @@ public class DngHeaderRequestInterceptor implements HttpRequestInterceptor {
 		installRequestInterceptor(client, addHeaders, null);
 	}
 
+	/**
+	 * Removes the request interceptor This should be done after each call, in order to make sure the interseptor is not active where it should not.
+	 * @param client
+	 */
 	public static void removeRequestInterceptor(OslcClient client) {
 		((DefaultHttpClient) client.getHttpClient()).removeRequestInterceptorByClass(DngHeaderRequestInterceptor.class);
 	}
