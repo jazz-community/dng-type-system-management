@@ -30,15 +30,15 @@ Provides a command **deliverTypeSystem** to deliver the changes to a type system
 
 ## Example parameters:
 
--command exportConfigurations -url https://clm.example.com:9443/rm -user jim -password ********** -project "GC JKE Banking (Requirements Management)" -csvfile export.csv -csvDelimiter ";"
+-command exportConfigurations -url https://clm.example.com:9443/rm -user ralph -password ********** -project "GC JKE Banking (Requirements Management)" -csvfile export.csv -csvDelimiter ";"
 
 -command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ********** -project "GC JKE Banking (Requirements Management)" -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
 
 -command exportAllConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ********** -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
 
--command importTypeSystem -url https://clm.example.com:9443/rm -user jim -password ********** -csvfile TypeSystemImport.csv -csvDelimiter ";"
+-command importTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ********** -csvfile TypeSystemImport.csv -csvDelimiter ";"
 
--command deliverTypeSystem -url https://clm.example.com:9443/rm -user jim -password ********** -csvfile TypeSystemDelivery.csv -csvDelimiter ";"
+-command deliverTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ********** -csvfile TypeSystemDelivery.csv -csvDelimiter ";"
 
 ## License
 This software is licensed under the Eclipse Public License: [Eclipse Public License - v 1.0](com.ibm.rm.typemanagement/LICENSE.html)
