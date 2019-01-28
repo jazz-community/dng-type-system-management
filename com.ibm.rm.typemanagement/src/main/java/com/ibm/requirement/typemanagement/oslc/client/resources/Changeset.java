@@ -303,10 +303,6 @@ public class Changeset extends AbstractResource {
 	 */
 	private String createChangeSet(final JazzFormAuthClient client)
 			throws URISyntaxException, IOException, OAuthException {
-		HashMap<String, String> header = new HashMap<String, String>();
-		header.put(OSLCConstants.OSLC_CORE_VERSION, DngTypeSystemManagementConstants.OSLC_VERSION_2_HEADER_VALUE);
-		header.put(DngTypeSystemManagementConstants.ACCEPT_HEADER, OSLCConstants.CT_RDF);
-
 		logger.debug("Create Changeset");
 		String changeSetCreationFactory = this.getChangeSetFactory().toString();
 		logger.debug("Create Changeset using factory '{}'", changeSetCreationFactory);
@@ -319,7 +315,6 @@ public class Changeset extends AbstractResource {
 		try {
 			response = client.createResource(changeSetCreationFactory, (Changeset) this,
 					OslcMediaType.APPLICATION_RDF_XML, OSLCConstants.CT_RDF);
-			DngHeaderRequestInterceptor.removeRequestInterceptor(client);
 			setAbout(null);
 
 			logger.debug("Status: " + response.getStatusCode());
