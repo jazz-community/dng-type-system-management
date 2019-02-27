@@ -143,7 +143,7 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 			if (client.login() == HttpStatus.SC_OK) {
 
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
-						.getMappingBydescriptionTag(client, helper, sourceTag, targetTag);
+						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
 				if (configurationList != null) {
 					// export the data
 					CsvUtil csv = new CsvUtil();
