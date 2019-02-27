@@ -27,7 +27,8 @@ public class ConfigurationMappingUtil {
 	public static final Logger logger = LoggerFactory.getLogger(ConfigurationMappingUtil.class);
 
 	/**
-	 * Get the source to target mapping for editable configurations for al project areas based on source and target description tag. 
+	 * Get the source to target mapping for editable configurations for al project
+	 * areas based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -39,7 +40,8 @@ public class ConfigurationMappingUtil {
 	 * @throws URISyntaxException
 	 * @throws ResourceNotFoundException
 	 */
-	public static List<CsvExportImportInformation> getMappingBydescriptionTag(JazzFormAuthClient client, JazzRootServicesHelper helper, String sourceTag, String targetTag)
+	public static List<CsvExportImportInformation> getMappingBydescriptionTag(JazzFormAuthClient client,
+			JazzRootServicesHelper helper, String sourceTag, String targetTag)
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		// Get the URL of the OSLC ChangeManagement catalog
 		logger.info("Getting Configurations");
@@ -48,11 +50,11 @@ public class ConfigurationMappingUtil {
 			logger.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
-	
+
 		// Get the components and the configurations for the components
 		Collection<Component> components = DngCmUtil.getComponentsForAllProjectAreas(client, cmCatalogUrl);
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-	
+
 		logger.info("Filtering for Configurations");
 		IRule sourceRule = new ContainsStringRule(sourceTag);
 		IRule targetRule = new ContainsStringRule(targetTag);
@@ -66,8 +68,8 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export to
-	 * prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the export
+	 * to prepare writing to CSV.
 	 * 
 	 * We are only interested in streams and the streams description must contain a
 	 * tag specified by a rule.
@@ -113,7 +115,8 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Get the source to target mapping for editable configurations for a project area based on source and target description tag. 
+	 * Get the source to target mapping for editable configurations for a project
+	 * area based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -126,34 +129,36 @@ public class ConfigurationMappingUtil {
 	 * @throws IOException
 	 * @throws OAuthException
 	 */
-	public static List<CsvExportImportInformation> getEditableConfigurationMappingForProjectAreaByDescriptionTag(JazzFormAuthClient client, JazzRootServicesHelper helper,
-			String projectAreaName, String sourceTag, String targetTag)
-			throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
+	public static List<CsvExportImportInformation> getEditableConfigurationMappingForProjectAreaByDescriptionTag(
+			JazzFormAuthClient client, JazzRootServicesHelper helper, String projectAreaName, String sourceTag,
+			String targetTag) throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
 		// Get rootservices
 		String catalogUrl = helper.getCatalogUrl();
 		ExportConfigurationsByDescription.logger.info("Getting Configurations");
-	
+
 		// Get the OSLC CM Service Provider
 		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 		if (cmCatalogUrl == null) {
-			ExportConfigurationsByDescription.logger.error("Unable to access the OSLC Configuration Management Provider URL");
+			ExportConfigurationsByDescription.logger
+					.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
-	
+
 		// Find the OSLC service provider for the project area - assuming the project
 		// area is CM enabled
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			ExportConfigurationsByDescription.logger.error("Unable to find project area service provider for '{}'", projectAreaName);
+			ExportConfigurationsByDescription.logger.error("Unable to find project area service provider for '{}'",
+					projectAreaName);
 			return null;
 		}
-	
+
 		// Get the components and the configurations for the components
 		Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-	
+
 		ExportConfigurationsByDescription.logger.info("Filtering for Configurations");
 		IRule sourceRule = new ContainsStringRule(sourceTag);
 		IRule targetRule = new ContainsStringRule(targetTag);
@@ -167,8 +172,8 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export to
-	 * prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the export
+	 * to prepare writing to CSV.
 	 * 
 	 * We are only interested in streams and the streams description must contain a
 	 * tag specified by a rule.
@@ -225,7 +230,8 @@ public class ConfigurationMappingUtil {
 	 * @throws IOException
 	 * @throws OAuthException
 	 */
-	public static List<CsvExportImportInformation> getEditableConfigurationsForProjectArea(JazzFormAuthClient client, JazzRootServicesHelper helper, String projectAreaName)
+	public static List<CsvExportImportInformation> getEditableConfigurationsForProjectArea(JazzFormAuthClient client,
+			JazzRootServicesHelper helper, String projectAreaName)
 			throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
 		// Get the URL of the OSLC ChangeManagement catalog
 		String catalogUrl = helper.getCatalogUrl();
@@ -235,14 +241,15 @@ public class ConfigurationMappingUtil {
 			ExportConfigurationsCmd.logger.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
-	
+
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			ExportConfigurationsCmd.logger.error("Unable to find project area service provider for '{}'", projectAreaName);
+			ExportConfigurationsCmd.logger.error("Unable to find project area service provider for '{}'",
+					projectAreaName);
 			return null;
 		}
-	
+
 		// Get the components and the configurations for the components
 		Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());

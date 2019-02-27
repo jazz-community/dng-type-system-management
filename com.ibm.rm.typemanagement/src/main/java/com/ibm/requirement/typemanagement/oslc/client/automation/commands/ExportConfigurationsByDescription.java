@@ -151,8 +151,9 @@ public class ExportConfigurationsByDescription extends AbstractCommand {
 			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
 			if (client.login() == HttpStatus.SC_OK) {
 
-				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil.getEditableConfigurationMappingForProjectAreaByDescriptionTag(client, helper,
-						projectAreaName, sourceTag, targetTag);
+				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
+						.getEditableConfigurationMappingForProjectAreaByDescriptionTag(client, helper, projectAreaName,
+								sourceTag, targetTag);
 				if (configurationList != null) {
 					// export the data
 					CsvUtil csv = new CsvUtil();

@@ -135,14 +135,15 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 
 			if (client.login() == HttpStatus.SC_OK) {
 
-				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
-				if(configurationList!=null) {
+				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
+						.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
+				if (configurationList != null) {
 					// export the data
 					CsvUtil csv = new CsvUtil();
 					if (null != csvDelimiter && csvDelimiter != "") {
 						csv.setSeperator(csvDelimiter.charAt(0));
 					}
-	
+
 					logger.info("Exporting data to file '{}'.", csvFilePath);
 					result = csv.exportConfigurationList(csvFilePath, configurationList);
 					logger.trace("End");
