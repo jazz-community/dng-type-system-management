@@ -13,7 +13,7 @@
  *
  *    Ralph Schoon - Initial implementation
  *******************************************************************************/
-package com.ibm.requirement.typemanagement.oslc.client.dngcm;
+package com.ibm.requirement.typemanagement.oslc.client.automation.util;
 
 import java.io.IOException;
 import java.util.HashMap;

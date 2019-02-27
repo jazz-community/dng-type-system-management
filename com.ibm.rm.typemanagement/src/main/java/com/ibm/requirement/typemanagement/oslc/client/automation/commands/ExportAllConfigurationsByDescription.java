@@ -15,9 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation.commands;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -31,13 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
-import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ContainsStringRule;
-import com.ibm.requirement.typemanagement.oslc.client.automation.framework.IRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Component;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
  * Exports the streams/configurations of a project area to CSV/Excel.
@@ -149,29 +142,8 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 
 			if (client.login() == HttpStatus.SC_OK) {
 
-				// Get the URL of the OSLC ChangeManagement catalog
-				logger.info("Getting Configurations");
-				String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
-				if (cmCatalogUrl == null) {
-					logger.error("Unable to access the OSLC Configuration Management Provider URL for '{}'",
-							webContextUrl);
-					return result;
-				}
-
-				// Get the components and the configurations for the components
-				Collection<Component> components = DngCmUtil.getComponentsForAllProjectAreas(client, cmCatalogUrl);
-				Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-
-				logger.info("Filtering for Configurations");
-				IRule sourceRule = new ContainsStringRule(sourceTag);
-				IRule targetRule = new ContainsStringRule(targetTag);
-				List<CsvExportImportInformation> configurationList = getConfigurations(configurations, sourceRule,
-						targetRule);
-				if (configurationList == null) {
-					logger.info("No valid configuration data found.");
-					return false;
-				}
-
+				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil.getMappingBydescriptionTag(client, helper, sourceTag, targetTag);
+				if(configurationList!=null) {
 				// export the data
 				CsvUtil csv = new CsvUtil();
 				if (null != csvDelimiter && csvDelimiter != "") {
@@ -181,60 +153,13 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 				logger.info("Exporting data to file '{}'.", csvFilePath);
 				result = csv.exportConfigurationList(csvFilePath, configurationList);
 				logger.trace("End");
-
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}
 		return result;
-	}
-
-	/**
-	 * Convert the configurations into the information needed for the export to
-	 * prepare writing to CSV.
-	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified b a rule.
-	 * 
-	 * @param configurations
-	 * @param projectArea
-	 * @param sourceRule
-	 * @param targetRule
-	 * @return
-	 * @throws URISyntaxException
-	 */
-	private List<CsvExportImportInformation> getConfigurations(Collection<Configuration> configurations,
-			IRule sourceRule, IRule targetRule) throws URISyntaxException {
-		List<CsvExportImportInformation> configurationList = new ArrayList<CsvExportImportInformation>();
-		Configuration source = null;
-		for (Configuration config : configurations) {
-			if (!config.isStream()) {
-				continue;
-			}
-			if (targetRule.matches(config.getDescription())) {
-				configurationList.add(new CsvExportImportInformation(null, config, ""));
-			}
-			if (sourceRule.matches(config.getDescription())) {
-				if (source != null) {
-					logger.info(
-							"Ambiguous sources found source 1 URI '{}' title '{}' source 2 URI '{}' title '{}' exiting.",
-							source.getAbout().toString(), source.getTitle(), config.getAbout().toString(),
-							config.getTitle());
-					return null;
-				}
-				source = config;
-			}
-		}
-		if (source != null) {
-			for (CsvExportImportInformation csvExportImportInformation : configurationList) {
-				csvExportImportInformation.setSource(source.getAbout().toString());
-			}
-		} else {
-			logger.info("No match for source.");
-			return null;
-		}
-		return configurationList;
 	}
 
 }

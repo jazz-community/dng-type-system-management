@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngHeaderRequestInterceptor;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.DngHeaderRequestInterceptor;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.IRequestTracker;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.RequestTrackerImpl;
 

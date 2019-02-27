@@ -15,9 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation.commands;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -33,10 +30,7 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.ProjectAreaOslcServiceProvider;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Component;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
  * Exports the streams/configurations of a project area to CSV/Excel.
@@ -141,66 +135,24 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 
 			if (client.login() == HttpStatus.SC_OK) {
 
-				// Get the URL of the OSLC ChangeManagement catalog
-				String catalogUrl = helper.getCatalogUrl();
-				logger.info("Getting Configurations");
-				String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
-				if (cmCatalogUrl == null) {
-					logger.error("Unable to access the OSLC Configuration Management Provider URL for '{}'",
-							webContextUrl);
-					return result;
+				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
+				if(configurationList!=null) {
+					// export the data
+					CsvUtil csv = new CsvUtil();
+					if (null != csvDelimiter && csvDelimiter != "") {
+						csv.setSeperator(csvDelimiter.charAt(0));
+					}
+	
+					logger.info("Exporting data to file '{}'.", csvFilePath);
+					result = csv.exportConfigurationList(csvFilePath, configurationList);
+					logger.trace("End");
 				}
-
-				final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
-						.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
-				if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-					logger.error("Unable to find project area service provider for '{}'", projectAreaName);
-					return result;
-				}
-
-				// Get the components and the configurations for the components
-				Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
-						rmProjectAreaOslcServiceProvider.getProjectAreaId());
-				Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-				logger.info("Filtering for Streams");
-				List<CsvExportImportInformation> configurationList = getStreams(configurations, projectAreaName);
-
-				// export the data
-				CsvUtil csv = new CsvUtil();
-				if (null != csvDelimiter && csvDelimiter != "") {
-					csv.setSeperator(csvDelimiter.charAt(0));
-				}
-
-				logger.info("Exporting data to file '{}'.", csvFilePath);
-				result = csv.exportConfigurationList(csvFilePath, configurationList);
-				logger.trace("End");
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}
 		return result;
-	}
-
-	/**
-	 * Convert the configurations into the information needed for the export to
-	 * prepare writing to CSV.
-	 * 
-	 * @param configurations
-	 * @param projectArea
-	 * @return
-	 * @throws URISyntaxException
-	 */
-	private static List<CsvExportImportInformation> getStreams(Collection<Configuration> configurations,
-			String projectArea) throws URISyntaxException {
-		List<CsvExportImportInformation> configurationList = new ArrayList<CsvExportImportInformation>();
-		for (Configuration target : configurations) {
-			if (target.isStream()) {
-				configurationList.add(new CsvExportImportInformation(null, target, projectArea));
-			}
-		}
-		return configurationList;
 	}
 
 }
