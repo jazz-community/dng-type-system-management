@@ -36,15 +36,15 @@ import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMapping
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
-public class ExportAllConfigurationsByDescription extends AbstractCommand {
+public class ExportConfigurationsByDescriptionCmd extends AbstractCommand {
 
-	public static final Logger logger = LoggerFactory.getLogger(ExportAllConfigurationsByDescription.class);
+	public static final Logger logger = LoggerFactory.getLogger(ExportConfigurationsByDescriptionCmd.class);
 
 	/**
 	 * Create new command and give it the name
 	 */
-	public ExportAllConfigurationsByDescription() {
-		super(DngTypeSystemManagementConstants.CMD_EXPORT_ALL_CONFIGURATIONS_BY_DESCRIPTION);
+	public ExportConfigurationsByDescriptionCmd() {
+		super(DngTypeSystemManagementConstants.CMD_EXPORT_CONFIGURATIONS_BY_DESCRIPTION);
 	}
 
 	@Override
@@ -55,6 +55,8 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_ID_DESCRIPTION);
 		options.addOption(DngTypeSystemManagementConstants.PARAMETER_PASSWORD, true,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_DESCRIPTION);
+		options.addOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA, true,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_DESCRIPTION);
 		options.addOption(DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG, true,
 				DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG_DESCRIPTION);
 		options.addOption(DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG, true,
@@ -73,6 +75,7 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 		if (!(cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_URL)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_USER)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PASSWORD)
+				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH))) {
@@ -92,6 +95,8 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_PROTOTYPE,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG,
 				DngTypeSystemManagementConstants.PARAMETER_TAG_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG,
@@ -107,12 +112,15 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_ID_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_EXAMPLE,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG,
 				DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG,
 				DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_EXAMPLE);
+
 		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
 		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
@@ -121,12 +129,14 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 
 	@Override
 	public boolean execute() {
+
 		boolean result = false;
 
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
 		String passwd = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PASSWORD);
+		String projectAreaName = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA);
 		String sourceTag = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_SOURCE_TAG);
 		String targetTag = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG);
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
@@ -139,11 +149,11 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 			logger.trace("Login");
 			String authUrl = webContextUrl.replaceFirst("/rm", "/jts");
 			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
-
 			if (client.login() == HttpStatus.SC_OK) {
 
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
-						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
+						.getEditableConfigurationMappingForProjectAreaByDescriptionTag(client, helper, projectAreaName,
+								sourceTag, targetTag);
 				if (configurationList != null) {
 					// export the data
 					CsvUtil csv = new CsvUtil();

@@ -39,10 +39,12 @@ public class CommandFactory {
 	private CommandFactory() {
 		super();
 		put(new ExportConfigurationsCmd());
-		put(new ExportConfigurationsByDescription());
-		put(new ExportAllConfigurationsByDescription());
+		put(new ExportConfigurationsByDescriptionCmd());
+		put(new ExportAllConfigurationsByDescriptionCmd());
 		put(new ImportTypeSystemCmd());
 		put(new DeliverTypeSystemCmd());
+		put(new ImportConfigurationsByDescriptionCmd());
+		put(new DeliverConfigurationsByDescriptionCmd());
 		// Enable sample command
 		// put(new SampleCommandCmd());
 	}

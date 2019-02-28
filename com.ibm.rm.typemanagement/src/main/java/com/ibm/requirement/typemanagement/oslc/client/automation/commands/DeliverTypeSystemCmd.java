@@ -32,9 +32,7 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.framework.Abstr
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ICommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
-import com.ibm.requirement.typemanagement.oslc.client.resources.DngCmDeliverySession;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
  * Use a CSV file as input to deliver the changes to a type system in a
@@ -117,7 +115,6 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 	public boolean execute() {
 
 		boolean result = false;
-		boolean delivery = true;
 
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
@@ -127,7 +124,6 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		try {
-
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
@@ -155,28 +151,7 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 				if (configurations == null) {
 					return result;
 				}
-				for (CsvExportImportInformation exportImportInformation : configurations) {
-					logger.info("-----------------------------------------------------------------------------");
-					logger.info("Deliver '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
-							exportImportInformation.getSource(), exportImportInformation.getTarget());
-
-					// Get the source and the target configuration
-					Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
-							exportImportInformation.getSource());
-					Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
-							exportImportInformation.getTarget());
-					String projectAreaServiceProviderUrl = targetConfiguration.getServiceProvider().toString();
-
-					// Deliver
-					Boolean deliverresult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
-							sourceConfiguration, targetConfiguration);
-					logger.trace("Result: {}", deliverresult.toString());
-					if (!deliverresult) {
-						logger.info("The delivery has failed or there were no differences to deliver!");
-					}
-					delivery &= deliverresult;
-				}
-				result = delivery;
+				result = ConfigurationMappingUtil.deliverConfigurations(client, configurations);
 				logger.trace("End");
 			}
 		} catch (RootServicesException re) {

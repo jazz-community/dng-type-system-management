@@ -34,6 +34,9 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CMD_EXPORT_CONFIGURATIONS_BY_DESCRIPTION = "exportConfigurationsByDescription";
 	public static final String CMD_EXPORT_ALL_CONFIGURATIONS_BY_DESCRIPTION = "exportAllConfigurationsByDescription";
 
+	public static final String CMD_IMPORT_CONFIGURATIONS_BY_DESCRIPTION = "importConfigurationsByDescription";
+	public static final String CMD_DELIVER_CONFIGURATIONS_BY_DESCRIPTION = "deliverConfigurationsByDescription";
+	
 	public static final String PARAMETER_URL = "url";
 	public static final String PARAMETER_URL_DESCRIPTION = "The Public URI of the application.";
 	public static final String PARAMETER_URL_EXAMPLE = "https://clm.example.com:9443/rm/";
@@ -126,5 +129,6 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CM_PROVIDER_CREATION_FACTORY = "creation";
 	public static final String CM_SERVICE_PROVIDER_PROPERTY_NAME = "cmServiceProviders";
 	public static final String PROCESS_NAMESPACE_PROPERTY_PROJECT_AREA = "projectArea";
+
 
 }

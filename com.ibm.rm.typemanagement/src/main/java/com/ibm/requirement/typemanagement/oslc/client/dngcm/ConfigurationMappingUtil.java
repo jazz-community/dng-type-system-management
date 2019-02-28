@@ -27,13 +27,18 @@ import org.eclipse.lyo.client.oslc.jazz.JazzRootServicesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ExportConfigurationsByDescription;
+import com.ibm.requirement.typemanagement.oslc.client.automation.commands.DeliverTypeSystemCmd;
+import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ExportConfigurationsByDescriptionCmd;
 import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ExportConfigurationsCmd;
+import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ImportTypeSystemCmd;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ContainsStringRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.IRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
+import com.ibm.requirement.typemanagement.oslc.client.resources.Changeset;
 import com.ibm.requirement.typemanagement.oslc.client.resources.Component;
 import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
+import com.ibm.requirement.typemanagement.oslc.client.resources.DngCmDeliverySession;
+import com.ibm.requirement.typemanagement.oslc.client.resources.DngCmTypeSystemImportSession;
 
 import net.oauth.OAuthException;
 
@@ -149,12 +154,12 @@ public class ConfigurationMappingUtil {
 			String targetTag) throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
 		// Get rootservices
 		String catalogUrl = helper.getCatalogUrl();
-		ExportConfigurationsByDescription.logger.info("Getting Configurations");
+		ExportConfigurationsByDescriptionCmd.logger.info("Getting Configurations");
 
 		// Get the OSLC CM Service Provider
 		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 		if (cmCatalogUrl == null) {
-			ExportConfigurationsByDescription.logger
+			ExportConfigurationsByDescriptionCmd.logger
 					.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
@@ -164,7 +169,7 @@ public class ConfigurationMappingUtil {
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			ExportConfigurationsByDescription.logger.error("Unable to find project area service provider for '{}'",
+			ExportConfigurationsByDescriptionCmd.logger.error("Unable to find project area service provider for '{}'",
 					projectAreaName);
 			return null;
 		}
@@ -174,13 +179,13 @@ public class ConfigurationMappingUtil {
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
 
-		ExportConfigurationsByDescription.logger.info("Filtering for Configurations");
+		ExportConfigurationsByDescriptionCmd.logger.info("Filtering for Configurations");
 		IRule sourceRule = new ContainsStringRule(sourceTag);
 		IRule targetRule = new ContainsStringRule(targetTag);
 		List<CsvExportImportInformation> configurationList = getConfigurationMapping(configurations, projectAreaName,
 				sourceRule, targetRule);
 		if (configurationList == null) {
-			ExportConfigurationsByDescription.logger.info("No valid configuration data found.");
+			ExportConfigurationsByDescriptionCmd.logger.info("No valid configuration data found.");
 			return null;
 		}
 		return configurationList;
@@ -213,7 +218,7 @@ public class ConfigurationMappingUtil {
 			}
 			if (sourceRule.matches(config.getDescription())) {
 				if (source != null) {
-					ExportConfigurationsByDescription.logger.info(
+					ExportConfigurationsByDescriptionCmd.logger.info(
 							"Ambiguous sources found source 1 URI '{}' title '{}' source 2 URI '{}' title '{}' exiting.",
 							source.getAbout().toString(), source.getTitle(), config.getAbout().toString(),
 							config.getTitle());
@@ -227,7 +232,7 @@ public class ConfigurationMappingUtil {
 				csvExportImportInformation.setSource(source.getAbout().toString());
 			}
 		} else {
-			ExportConfigurationsByDescription.logger.info("No match for source.");
+			ExportConfigurationsByDescriptionCmd.logger.info("No match for source.");
 			return null;
 		}
 		return configurationList;
@@ -292,6 +297,114 @@ public class ConfigurationMappingUtil {
 			}
 		}
 		return configurationList;
+	}
+
+	/**
+	 * Import Type System changes based on a mapping.
+	 * 
+	 * @param client
+	 * @param configurations
+	 * @return
+	 * @throws IOException
+	 * @throws OAuthException
+	 * @throws URISyntaxException
+	 * @throws ResourceNotFoundException
+	 */
+	public static boolean importConfigurations(JazzFormAuthClient client,
+			List<CsvExportImportInformation> configurations)
+			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
+		boolean totalResult = true;
+		for (CsvExportImportInformation exportImportInformation : configurations) {
+			ImportTypeSystemCmd.logger.info("-----------------------------------------------------------------------------");
+			ImportTypeSystemCmd.logger.info("Import '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
+					exportImportInformation.getSource(), exportImportInformation.getTarget());
+	
+			// Get the source and the target configuration
+			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
+					exportImportInformation.getSource());
+			Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
+					exportImportInformation.getTarget());
+	
+			// Create the change set as target for the import.
+			Boolean operationResult = false;
+			Changeset changeSet = new Changeset(client, targetConfiguration);
+			if (changeSet.getAbout() == null) {
+				ImportTypeSystemCmd.logger.info("Failed to create change set as import target.");
+				totalResult &= operationResult;
+				continue;
+			}
+			ImportTypeSystemCmd.logger.trace("Change set'{}'", changeSet.getAbout().toString());
+			Configuration changeSetConfiguration = DngCmUtil.getConfiguration(client,
+					changeSet.getAbout().toString());
+			if (changeSetConfiguration == null) {
+				totalResult &= operationResult;
+				ImportTypeSystemCmd.logger.info("Failed to create change set as import target.");
+				continue;
+			}
+			// Import the type system changes from the source stream into the change set
+			operationResult = DngCmTypeSystemImportSession.performTypeImport(client, sourceConfiguration,
+					changeSetConfiguration);
+			if (!operationResult) {
+				totalResult &= operationResult;
+				ImportTypeSystemCmd.logger.info("Failed to Import into change set '{}'.",
+						changeSetConfiguration.getAbout().toString());
+				continue;
+			}
+			String projectAreaServiceProviderUrl = changeSetConfiguration.getServiceProvider().toString();
+			// Deliver the change set with its changes to the target stream
+			operationResult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
+					changeSetConfiguration, targetConfiguration);
+	
+			if (!operationResult) {
+				totalResult &= operationResult;
+				ImportTypeSystemCmd.logger.info("The delivery has failed or there were no differences to deliver!");
+				Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
+				ImportTypeSystemCmd.logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
+						changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
+						deleted.toString());
+				continue;
+			}
+			ImportTypeSystemCmd.logger.trace("Result: {}", operationResult.toString());
+			totalResult &= operationResult;
+		}
+		return totalResult;
+	}
+
+	/**
+	 * Deliver Type System changes based on a mapping.
+	 * 
+	 * @param client
+	 * @param configurations
+	 * @return
+	 * @throws IOException
+	 * @throws OAuthException
+	 * @throws URISyntaxException
+	 * @throws ResourceNotFoundException
+	 */
+	public static boolean deliverConfigurations(JazzFormAuthClient client, List<CsvExportImportInformation> configurations) throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
+		boolean delivery = true;
+		for (CsvExportImportInformation exportImportInformation : configurations) {
+			DeliverTypeSystemCmd.logger.info("-----------------------------------------------------------------------------");
+			DeliverTypeSystemCmd.logger.info("Deliver '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
+					exportImportInformation.getSource(), exportImportInformation.getTarget());
+	
+			// Get the source and the target configuration
+			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
+					exportImportInformation.getSource());
+			Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
+					exportImportInformation.getTarget());
+			String projectAreaServiceProviderUrl = targetConfiguration.getServiceProvider().toString();
+	
+			// Deliver
+			Boolean deliverresult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
+					sourceConfiguration, targetConfiguration);
+			DeliverTypeSystemCmd.logger.trace("Result: {}", deliverresult.toString());
+			if (!deliverresult) {
+				DeliverTypeSystemCmd.logger.info("The delivery has failed or there were no differences to deliver!");
+			}
+			delivery &= deliverresult;
+		}
+		return delivery;
 	}
 
 }
