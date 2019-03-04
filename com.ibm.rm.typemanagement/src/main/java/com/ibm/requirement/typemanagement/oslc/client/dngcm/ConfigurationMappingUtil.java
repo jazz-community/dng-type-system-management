@@ -60,8 +60,8 @@ public class ConfigurationMappingUtil {
 	 * @throws URISyntaxException
 	 * @throws ResourceNotFoundException
 	 */
-	public static List<CsvExportImportInformation> getEditableConfigurationMappingBydescriptionTag(JazzFormAuthClient client,
-			JazzRootServicesHelper helper, String sourceTag, String targetTag)
+	public static List<CsvExportImportInformation> getEditableConfigurationMappingBydescriptionTag(
+			JazzFormAuthClient client, JazzRootServicesHelper helper, String sourceTag, String targetTag)
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		// Get the URL of the OSLC ChangeManagement catalog
 		logger.info("Getting Configurations");
@@ -315,16 +315,16 @@ public class ConfigurationMappingUtil {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean totalResult = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			ImportTypeSystemCmd.logger.info("-----------------------------------------------------------------------------");
-			ImportTypeSystemCmd.logger.info("Import '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
-					exportImportInformation.getSource(), exportImportInformation.getTarget());
-	
-			// Get the source and the target configuration
-			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
-					exportImportInformation.getSource());
-			Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
+			ImportTypeSystemCmd.logger
+					.info("-----------------------------------------------------------------------------");
+			ImportTypeSystemCmd.logger.info("Import from '{}' to '{}' ",
+					exportImportInformation.getProjectAreaName(), exportImportInformation.getSource(),
 					exportImportInformation.getTarget());
-	
+
+			// Get the source and the target configuration
+			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getSource());
+			Configuration targetConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getTarget());
+
 			// Create the change set as target for the import.
 			Boolean operationResult = false;
 			Changeset changeSet = new Changeset(client, targetConfiguration);
@@ -334,8 +334,7 @@ public class ConfigurationMappingUtil {
 				continue;
 			}
 			ImportTypeSystemCmd.logger.trace("Change set'{}'", changeSet.getAbout().toString());
-			Configuration changeSetConfiguration = DngCmUtil.getConfiguration(client,
-					changeSet.getAbout().toString());
+			Configuration changeSetConfiguration = DngCmUtil.getConfiguration(client, changeSet.getAbout().toString());
 			if (changeSetConfiguration == null) {
 				totalResult &= operationResult;
 				ImportTypeSystemCmd.logger.info("Failed to create change set as import target.");
@@ -354,12 +353,13 @@ public class ConfigurationMappingUtil {
 			// Deliver the change set with its changes to the target stream
 			operationResult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
 					changeSetConfiguration, targetConfiguration);
-	
+
 			if (!operationResult) {
 				totalResult &= operationResult;
 				ImportTypeSystemCmd.logger.info("The delivery has failed or there were no differences to deliver!");
 				Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
-				ImportTypeSystemCmd.logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
+				ImportTypeSystemCmd.logger.error(
+						"Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
 						changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
 						deleted.toString());
 				continue;
@@ -381,20 +381,21 @@ public class ConfigurationMappingUtil {
 	 * @throws URISyntaxException
 	 * @throws ResourceNotFoundException
 	 */
-	public static boolean deliverConfigurations(JazzFormAuthClient client, List<CsvExportImportInformation> configurations) throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
+	public static boolean deliverConfigurations(JazzFormAuthClient client,
+			List<CsvExportImportInformation> configurations)
+			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean delivery = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			DeliverTypeSystemCmd.logger.info("-----------------------------------------------------------------------------");
-			DeliverTypeSystemCmd.logger.info("Deliver '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
-					exportImportInformation.getSource(), exportImportInformation.getTarget());
-	
-			// Get the source and the target configuration
-			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
-					exportImportInformation.getSource());
-			Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
+			DeliverTypeSystemCmd.logger
+					.info("-----------------------------------------------------------------------------");
+			DeliverTypeSystemCmd.logger.info("Deliver from '{}' to '{}' ", exportImportInformation.getSource(),
 					exportImportInformation.getTarget());
+
+			// Get the source and the target configuration
+			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getSource());
+			Configuration targetConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getTarget());
 			String projectAreaServiceProviderUrl = targetConfiguration.getServiceProvider().toString();
-	
+
 			// Deliver
 			Boolean deliverresult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
 					sourceConfiguration, targetConfiguration);

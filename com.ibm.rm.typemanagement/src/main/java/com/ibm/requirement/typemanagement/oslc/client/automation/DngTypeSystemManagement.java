@@ -94,18 +94,16 @@ public class DngTypeSystemManagement {
 		// Get the command name provided as option
 		String command = cmd.getOptionValue(DngTypeSystemManagementConstants.PARAMETER_COMMAND);
 		if (command == null) {
-			logger.error("Missing command \nSyntax: -command commandName {[-parameter] [parameterValue]}");
+			logger.error("Missing command \n\nSyntax: -command commandName {[-parameter] [parameterValue]}");
 			printSupportedCommands();
-			logger.info("Failed.");
 			return result;
 		}
 
 		// get the class to execute
 		ICommand execCommand = CommandFactory.INSTANCE().getCommandMap().get(command);
 		if (execCommand == null) {
-			logger.error("Unsupported command name '{}' ", command);
+			logger.error("Unsupported command name '{}' \n", command);
 			printSupportedCommands();
-			logger.info("Failed.");
 			return result;
 		}
 

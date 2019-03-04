@@ -35,15 +35,15 @@ import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMapping
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
-public class DeliverConfigurationsByDescriptionCmd extends AbstractCommand {
+public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 
-	public static final Logger logger = LoggerFactory.getLogger(DeliverConfigurationsByDescriptionCmd.class);
+	public static final Logger logger = LoggerFactory.getLogger(DeliverTypeSystemByDescriptionCmd.class);
 
 	/**
 	 * Create new command and give it the name
 	 */
-	public DeliverConfigurationsByDescriptionCmd() {
-		super(DngTypeSystemManagementConstants.CMD_IMPORT_CONFIGURATIONS_BY_DESCRIPTION);
+	public DeliverTypeSystemByDescriptionCmd() {
+		super(DngTypeSystemManagementConstants.CMD_DELIVER_TYPESYSTEM_BY_DESCRIPTION);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class DeliverConfigurationsByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -90,7 +90,7 @@ public class DeliverConfigurationsByDescriptionCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_TAG_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG,
 				DngTypeSystemManagementConstants.PARAMETER_TAG_PROTOTYPE);
-		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
+		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL, DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_USER,

@@ -34,8 +34,8 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CMD_EXPORT_CONFIGURATIONS_BY_DESCRIPTION = "exportConfigurationsByDescription";
 	public static final String CMD_EXPORT_ALL_CONFIGURATIONS_BY_DESCRIPTION = "exportAllConfigurationsByDescription";
 
-	public static final String CMD_IMPORT_CONFIGURATIONS_BY_DESCRIPTION = "importConfigurationsByDescription";
-	public static final String CMD_DELIVER_CONFIGURATIONS_BY_DESCRIPTION = "deliverConfigurationsByDescription";
+	public static final String CMD_IMPORT_TYPESYSTEM_BY_DESCRIPTION = "importTypeSystemByDescription";
+	public static final String CMD_DELIVER_TYPESYSTEM_BY_DESCRIPTION = "deliverTypeSystemByDescription";
 	
 	public static final String PARAMETER_URL = "url";
 	public static final String PARAMETER_URL_DESCRIPTION = "The Public URI of the application.";

@@ -35,15 +35,15 @@ import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMapping
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
-public class ImportConfigurationsByDescriptionCmd extends AbstractCommand {
+public class ImportTypeSystemByDescriptionCmd extends AbstractCommand {
 
-	public static final Logger logger = LoggerFactory.getLogger(ImportConfigurationsByDescriptionCmd.class);
+	public static final Logger logger = LoggerFactory.getLogger(ImportTypeSystemByDescriptionCmd.class);
 
 	/**
 	 * Create new command and give it the name
 	 */
-	public ImportConfigurationsByDescriptionCmd() {
-		super(DngTypeSystemManagementConstants.CMD_DELIVER_CONFIGURATIONS_BY_DESCRIPTION);
+	public ImportTypeSystemByDescriptionCmd() {
+		super(DngTypeSystemManagementConstants.CMD_IMPORT_TYPESYSTEM_BY_DESCRIPTION);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ImportConfigurationsByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -90,7 +90,7 @@ public class ImportConfigurationsByDescriptionCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_TAG_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG,
 				DngTypeSystemManagementConstants.PARAMETER_TAG_PROTOTYPE);
-		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
+		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL, DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_USER,
