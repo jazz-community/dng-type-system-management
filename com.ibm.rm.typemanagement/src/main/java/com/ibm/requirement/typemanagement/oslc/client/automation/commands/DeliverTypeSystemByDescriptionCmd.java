@@ -78,7 +78,8 @@ public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
+		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams. Delivers the type system of the source stream to all target streams.");
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,

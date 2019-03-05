@@ -84,7 +84,8 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tReads a CSV file with a source to target mapping of configurations. Delivers the type system of the source configurations to the target configuration.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,

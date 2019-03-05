@@ -81,7 +81,8 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tFinds all editable configurations of a project area and exports the information into a CSV file.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,

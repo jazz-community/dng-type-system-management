@@ -84,7 +84,8 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tReads a CSV file with a source to target mapping of configurations. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,

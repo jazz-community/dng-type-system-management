@@ -87,7 +87,8 @@ public class ExportConfigurationsByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams in a project area to create a mapping and exports the information into a CSV file.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
