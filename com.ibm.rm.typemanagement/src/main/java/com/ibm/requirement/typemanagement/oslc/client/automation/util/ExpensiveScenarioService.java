@@ -31,7 +31,6 @@ import org.apache.http.HttpStatus;
 import org.apache.wink.client.ClientResponse;
 import org.eclipse.lyo.client.oslc.OSLCConstants;
 import org.eclipse.lyo.client.oslc.jazz.JazzFormAuthClient;
-import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
