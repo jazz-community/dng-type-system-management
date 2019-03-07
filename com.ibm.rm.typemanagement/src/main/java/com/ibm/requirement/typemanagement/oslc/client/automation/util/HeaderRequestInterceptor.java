@@ -33,7 +33,7 @@ import org.eclipse.lyo.client.oslc.OslcClient;
  *
  */
 @SuppressWarnings("deprecation")
-public class DngHeaderRequestInterceptor implements HttpRequestInterceptor {
+public class HeaderRequestInterceptor implements HttpRequestInterceptor {
 
 	HashMap<String, String> addHeaders = null;
 	HashMap<String, String> removeHeaders = null;
@@ -44,7 +44,7 @@ public class DngHeaderRequestInterceptor implements HttpRequestInterceptor {
 	 * @param addHeaders    the headers to be added or null
 	 * @param removeHeaders the headers to be removed or null
 	 */
-	private DngHeaderRequestInterceptor(HashMap<String, String> addHeaders, HashMap<String, String> removeHeaders) {
+	private HeaderRequestInterceptor(HashMap<String, String> addHeaders, HashMap<String, String> removeHeaders) {
 		this.addHeaders = addHeaders;
 		this.removeHeaders = removeHeaders;
 	}
@@ -78,7 +78,7 @@ public class DngHeaderRequestInterceptor implements HttpRequestInterceptor {
 	 */
 	public static void installRequestInterceptor(OslcClient client, HashMap<String, String> addHeaders,
 			HashMap<String, String> removeHeaders) {
-		HttpRequestInterceptor requestHeaderFixer = new DngHeaderRequestInterceptor(addHeaders, removeHeaders);
+		HttpRequestInterceptor requestHeaderFixer = new HeaderRequestInterceptor(addHeaders, removeHeaders);
 		((DefaultHttpClient) client.getHttpClient()).addRequestInterceptor(requestHeaderFixer);
 
 	}
@@ -101,7 +101,7 @@ public class DngHeaderRequestInterceptor implements HttpRequestInterceptor {
 	 * @param client
 	 */
 	public static void removeRequestInterceptor(OslcClient client) {
-		((DefaultHttpClient) client.getHttpClient()).removeRequestInterceptorByClass(DngHeaderRequestInterceptor.class);
+		((DefaultHttpClient) client.getHttpClient()).removeRequestInterceptorByClass(HeaderRequestInterceptor.class);
 	}
 
 	/**

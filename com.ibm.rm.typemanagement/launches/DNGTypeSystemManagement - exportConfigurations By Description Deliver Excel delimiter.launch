@@ -11,7 +11,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagement"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ralph -project &quot;GC JKE Banking (Requirements Management)&quot; -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile &quot;c:\Temp\exporttag_deliver.csv&quot; -csvDelimiter &quot;;&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ralph -project &quot;CM 2 (Requirements Management)&quot; -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile &quot;c:\Temp\exporttag_deliver.csv&quot; -csvDelimiter &quot;;&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.rm.typemanagement"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

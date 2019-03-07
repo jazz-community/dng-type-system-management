@@ -32,6 +32,8 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.framework.Abstr
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ICommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -124,15 +126,30 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
+		JazzFormAuthClient client = null;
+		IExpensiveScenarioService scenarioService=null;
+		String scenarioInstance=null;
 		try {
+			// Import the data
+			CsvUtil csv = new CsvUtil();
+			if (null != csvDelimiter && csvDelimiter != "") {
+				csv.setSeperator(csvDelimiter.charAt(0));
+			}
+
+			logger.info("Using csv file '{}'", csvFilePath);
+			List<CsvExportImportInformation> configurations = csv.readConfigurations(csvFilePath);
+			if (configurations == null) {
+				return result;
+			}
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
 			String authUrl = webContextUrl.replaceFirst("/rm", "/jts");
-			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
+			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-
+				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
+				scenarioInstance = scenarioService.start(client);
 				// Get the URL of the OSLC ChangeManagement catalog
 				String cmCatalogUrl = helper.getCatalogUrl();
 				if (cmCatalogUrl == null) {
@@ -141,17 +158,6 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 					return result;
 				}
 
-				// Import the data
-				CsvUtil csv = new CsvUtil();
-				if (null != csvDelimiter && csvDelimiter != "") {
-					csv.setSeperator(csvDelimiter.charAt(0));
-				}
-
-				logger.info("Using csv file '{}'", csvFilePath);
-				List<CsvExportImportInformation> configurations = csv.readConfigurations(csvFilePath);
-				if (configurations == null) {
-					return result;
-				}
 				result = ConfigurationMappingUtil.deliverConfigurations(client, configurations);
 				logger.trace("End");
 			}
@@ -160,6 +166,14 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+		} finally {
+			if(scenarioInstance!=null) {
+				try {
+					scenarioService.stop(client, scenarioInstance);
+				} catch (Exception e) {
+					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
+				}
+			}
 		}
 		return result;
 	}

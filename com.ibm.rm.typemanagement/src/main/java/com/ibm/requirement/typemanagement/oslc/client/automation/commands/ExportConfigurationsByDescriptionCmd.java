@@ -30,6 +30,8 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -143,15 +145,18 @@ public class ExportConfigurationsByDescriptionCmd extends AbstractCommand {
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
+		JazzFormAuthClient client = null;
+		IExpensiveScenarioService scenarioService=null;
+		String scenarioInstance=null;
 		try {
-
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
 			String authUrl = webContextUrl.replaceFirst("/rm", "/jts");
-			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
+			client = helper.initFormClient(user, passwd, authUrl);
 			if (client.login() == HttpStatus.SC_OK) {
-
+				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
+				scenarioInstance = scenarioService.start(client);
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
 						.getEditableConfigurationMappingForProjectAreaByDescriptionTag(client, helper, projectAreaName,
 								sourceTag, targetTag);
@@ -170,6 +175,14 @@ public class ExportConfigurationsByDescriptionCmd extends AbstractCommand {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+		} finally {
+			if(scenarioInstance!=null) {
+				try {
+					scenarioService.stop(client, scenarioInstance);
+				} catch (Exception e) {
+					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
+				}
+			}
 		}
 		return result;
 	}
