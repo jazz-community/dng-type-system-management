@@ -4,6 +4,22 @@ Type System Manager V1.1
 
 Command line tool to support managing IBM Rational DOORS Next Generation Type Systems.
 
+See  the following material to understand the code.
+ *  [Maintaining the Rational DOORS Next Generation type system in a configuration-management-enabled environment. Part 1: Manual procedures](https://jazz.net/library/article/92352)
+ *  [Maintaining the Rational DOORS Next Generation type system in a configuration-management-enabled environment. Part 2: Automation](https://jazz.net/library/article/92554)
+ *  [Maintaining the Rational DOORS Next Generation type system in a configuration-management-enabled environment. Part 3: Automation tool deep dive](https://jazz.net/library/article/92596)
+ 
+ [Part 1: Manual procedures](https://jazz.net/library/article/92352) explains the best practices backing up the approach.
+ *  [Part 2: Automation](https://jazz.net/library/article/92554) explains the basics how the automation works, very much like this readme. [Part 3: Automation tool deep dive](https://jazz.net/library/article/92596) is a deep dive in how to get the code, compile the code, buld the code and package releases. It also explains in great detail how the code works.
+ 
+ Additional information can be found in
+ 
+ *  [Type System Manager Part 1](https://rsjazz.wordpress.com/2019/02/01/type-system-manager-part-1/) 
+ *  [Type System Manager Part 2](https://rsjazz.wordpress.com/2019/03/07/type-system-manager-part-2/)
+ *  [And this query](https://rsjazz.wordpress.com/?s=type-system-manager&submit=Search)
+
+The Type System Manager 
+
 Provides a conmmand **deliverTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then delivers the type system of the source stream to all target streams.
 
 Provides a conmmand **importTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then imports the type system of the source stream into all target streams.
