@@ -74,10 +74,8 @@ The Type System Manager provides the following commands
 ## License
 This software is licensed under the Eclipse Public License: [Eclipse Public License - v 1.0](com.ibm.rm.typemanagement/LICENSE.html)
 
-The code is dependent on and uses the following packages
-
 ## Dependent on 
-The code usses the following packages published under the following licenses
+The code is dependent on, and usses the following packages published under the following licenses
 
 | Package          | Version      | License                                                         |
 |------------------|--------------|-----------------------------------------------------------------|
