@@ -18,21 +18,21 @@ See  the following material to understand the code.
  *  [Type System Manager Part 2](https://rsjazz.wordpress.com/2019/03/07/type-system-manager-part-2/)
  *  [And this query](https://rsjazz.wordpress.com/?s=type-system-manager&submit=Search)
 
-The Type System Manager 
+The Type System Manager provides the following commands
 
-Provides a conmmand **deliverTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then delivers the type system of the source stream to all target streams.
+ *  **deliverTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then delivers the type system of the source stream to all target streams.
 
-Provides a conmmand **importTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then imports the type system of the source stream into all target streams.
+ *  **importTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then imports the type system of the source stream into all target streams.
 
-Provides a conmmand **exportConfigurations** to export the streams/configurations for components of a project area as target into a source to target mapping CSV file.
+ *  **exportConfigurations** to export the streams/configurations for components of a project area as target into a source to target mapping CSV file.
 
-Provides a conmmand **exportConfigurationsByDescription** to export a source to target mapping for the configurations of the components of a project area to a CSV file, where the configurations are streams and marked with a source or target tag as substring in the description.
+ *  **exportConfigurationsByDescription** to export a source to target mapping for the configurations of the components of a project area to a CSV file, where the configurations are streams and marked with a source or target tag as substring in the description.
 
-Provides a conmmand **exportAllConfigurationsByDescription** to export a source to target mapping for the configurations of the components of all project areas to a CSV file, where the configurations are streams and marked with a source or target tag as substring in the description.
+ *  **exportAllConfigurationsByDescription** to export a source to target mapping for the configurations of the components of all project areas to a CSV file, where the configurations are streams and marked with a source or target tag as substring in the description.
 
-Provides a command **importTypeSystem** to import a RM Type System from streams/configurations of a component into streams/configurations of other components using a CSV/Excel file describing the source and target configurations.
+ *  **importTypeSystem** to import a RM Type System from streams/configurations of a component into streams/configurations of other components using a CSV/Excel file describing the source and target configurations.
 
-Provides a command **deliverTypeSystem** to deliver the changes to a type system in source streams/configurations of components to other streams/configurations for this component using a CSV/Excel file describing the source and target configurations.
+ *  **deliverTypeSystem** to deliver the changes to a type system in source streams/configurations of components to other streams/configurations for this component using a CSV/Excel file describing the source and target configurations.
 
 ## Manual Workflow
 
