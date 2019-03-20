@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngHeaderRequestInterceptor;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.HeaderRequestInterceptor;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.IRequestTracker;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.RequestTrackerImpl;
 
@@ -116,7 +116,7 @@ public class DngCmTypeSystemImportSession extends AbstractResource {
 		HashMap<String, String> removeHeader = new HashMap<String, String>();
 		removeHeader.put(OSLCConstants.OSLC_CORE_VERSION, "");
 
-		DngHeaderRequestInterceptor.installRequestInterceptor(client, header, removeHeader);
+		HeaderRequestInterceptor.installRequestInterceptor(client, header, removeHeader);
 
 		ClientResponse response = null;
 		try {
@@ -124,7 +124,7 @@ public class DngCmTypeSystemImportSession extends AbstractResource {
 			response = client.createResource(typeImportCreationFactory, typeImportSession,
 					OslcMediaType.APPLICATION_RDF_XML, OSLCConstants.CT_RDF);
 			logger.debug("Status: " + response.getStatusCode());
-			DngHeaderRequestInterceptor.removeRequestInterceptor(client);
+			HeaderRequestInterceptor.removeRequestInterceptor(client);
 
 			if (response.getStatusCode() == 202) {
 

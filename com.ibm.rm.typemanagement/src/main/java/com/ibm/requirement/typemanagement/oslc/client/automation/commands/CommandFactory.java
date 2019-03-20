@@ -39,10 +39,12 @@ public class CommandFactory {
 	private CommandFactory() {
 		super();
 		put(new ExportConfigurationsCmd());
-		put(new ExportConfigurationsByDescription());
-		put(new ExportAllConfigurationsByDescription());
+		put(new ExportConfigurationsByDescriptionCmd());
+		put(new ExportAllConfigurationsByDescriptionCmd());
 		put(new ImportTypeSystemCmd());
 		put(new DeliverTypeSystemCmd());
+		put(new ImportTypeSystemByDescriptionCmd());
+		put(new DeliverTypeSystemByDescriptionCmd());
 		// Enable sample command
 		// put(new SampleCommandCmd());
 	}
@@ -70,6 +72,7 @@ public class CommandFactory {
 		Collection<ICommand> commands = commandMap.values();
 		for (ICommand iCommand : commands) {
 			iCommand.printSyntax();
+			logger.info("\n");
 		}
 	}
 

@@ -15,9 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation.commands;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -31,26 +28,24 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
-import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ContainsStringRule;
-import com.ibm.requirement.typemanagement.oslc.client.automation.framework.IRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Component;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
-public class ExportAllConfigurationsByDescription extends AbstractCommand {
+public class ExportAllConfigurationsByDescriptionCmd extends AbstractCommand {
 
-	public static final Logger logger = LoggerFactory.getLogger(ExportAllConfigurationsByDescription.class);
+	public static final Logger logger = LoggerFactory.getLogger(ExportAllConfigurationsByDescriptionCmd.class);
 
 	/**
 	 * Create new command and give it the name
 	 */
-	public ExportAllConfigurationsByDescription() {
+	public ExportAllConfigurationsByDescriptionCmd() {
 		super(DngTypeSystemManagementConstants.CMD_EXPORT_ALL_CONFIGURATIONS_BY_DESCRIPTION);
 	}
 
@@ -91,7 +86,8 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams in to create a mapping and exports the information into a CSV file.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -107,7 +103,7 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
-		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
+		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL, DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_USER,
@@ -139,102 +135,48 @@ public class ExportAllConfigurationsByDescription extends AbstractCommand {
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
+		JazzFormAuthClient client = null;
+		IExpensiveScenarioService scenarioService=null;
+		String scenarioInstance=null;
 		try {
 
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
 			String authUrl = webContextUrl.replaceFirst("/rm", "/jts");
-			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
+			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
 
-				// Get the URL of the OSLC ChangeManagement catalog
-				logger.info("Getting Configurations");
-				String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
-				if (cmCatalogUrl == null) {
-					logger.error("Unable to access the OSLC Configuration Management Provider URL for '{}'",
-							webContextUrl);
-					return result;
+				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
+				scenarioInstance = scenarioService.start(client);
+				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
+						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
+				if (configurationList != null) {
+					// export the data
+					CsvUtil csv = new CsvUtil();
+					if (null != csvDelimiter && csvDelimiter != "") {
+						csv.setSeperator(csvDelimiter.charAt(0));
+					}
+
+					logger.info("Exporting data to file '{}'.", csvFilePath);
+					result = csv.exportConfigurationList(csvFilePath, configurationList);
+					logger.trace("End");
 				}
-
-				// Get the components and the configurations for the components
-				Collection<Component> components = DngCmUtil.getComponentsForAllProjectAreas(client, cmCatalogUrl);
-				Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-
-				logger.info("Filtering for Configurations");
-				IRule sourceRule = new ContainsStringRule(sourceTag);
-				IRule targetRule = new ContainsStringRule(targetTag);
-				List<CsvExportImportInformation> configurationList = getConfigurations(configurations, sourceRule,
-						targetRule);
-				if (configurationList == null) {
-					logger.info("No valid configuration data found.");
-					return false;
-				}
-
-				// export the data
-				CsvUtil csv = new CsvUtil();
-				if (null != csvDelimiter && csvDelimiter != "") {
-					csv.setSeperator(csvDelimiter.charAt(0));
-				}
-
-				logger.info("Exporting data to file '{}'.", csvFilePath);
-				result = csv.exportConfigurationList(csvFilePath, configurationList);
-				logger.trace("End");
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+		} finally {
+			if(scenarioInstance!=null) {
+				try {
+					scenarioService.stop(client, scenarioInstance);
+				} catch (Exception e) {
+					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
+				}
+			}
 		}
 		return result;
-	}
-
-	/**
-	 * Convert the configurations into the information needed for the export to
-	 * prepare writing to CSV.
-	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified b a rule.
-	 * 
-	 * @param configurations
-	 * @param projectArea
-	 * @param sourceRule
-	 * @param targetRule
-	 * @return
-	 * @throws URISyntaxException
-	 */
-	private List<CsvExportImportInformation> getConfigurations(Collection<Configuration> configurations,
-			IRule sourceRule, IRule targetRule) throws URISyntaxException {
-		List<CsvExportImportInformation> configurationList = new ArrayList<CsvExportImportInformation>();
-		Configuration source = null;
-		for (Configuration config : configurations) {
-			if (!config.isStream()) {
-				continue;
-			}
-			if (targetRule.matches(config.getDescription())) {
-				configurationList.add(new CsvExportImportInformation(null, config, ""));
-			}
-			if (sourceRule.matches(config.getDescription())) {
-				if (source != null) {
-					logger.info(
-							"Ambiguous sources found source 1 URI '{}' title '{}' source 2 URI '{}' title '{}' exiting.",
-							source.getAbout().toString(), source.getTitle(), config.getAbout().toString(),
-							config.getTitle());
-					return null;
-				}
-				source = config;
-			}
-		}
-		if (source != null) {
-			for (CsvExportImportInformation csvExportImportInformation : configurationList) {
-				csvExportImportInformation.setSource(source.getAbout().toString());
-			}
-		} else {
-			logger.info("No match for source.");
-			return null;
-		}
-		return configurationList;
 	}
 
 }

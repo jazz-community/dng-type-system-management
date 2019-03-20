@@ -31,11 +31,9 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngCmUtil;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Changeset;
-import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
-import com.ibm.requirement.typemanagement.oslc.client.resources.DngCmDeliverySession;
-import com.ibm.requirement.typemanagement.oslc.client.resources.DngCmTypeSystemImportSession;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
  * Use a CSV file as input to import the type system in streams/configurations
@@ -88,7 +86,8 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tReads a CSV file with a source to target mapping of configurations. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");		
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -118,7 +117,6 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 	@Override
 	public boolean execute() {
 		boolean result = false;
-		boolean totalResult = true;
 
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
@@ -127,13 +125,15 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
+		JazzFormAuthClient client = null;
+		IExpensiveScenarioService scenarioService=null;
+		String scenarioInstance=null;
 		try {
-
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
 			String authUrl = webContextUrl.replaceFirst("/rm", "/jts");
-			JazzFormAuthClient client = helper.initFormClient(user, passwd, authUrl);
+			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
 
@@ -147,60 +147,9 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 				if (configurations == null) {
 					return result;
 				}
-				for (CsvExportImportInformation exportImportInformation : configurations) {
-					logger.info("-----------------------------------------------------------------------------");
-					logger.info("Import '{}' from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
-							exportImportInformation.getSource(), exportImportInformation.getTarget());
-
-					// Get the source and the target configuration
-					Configuration sourceConfiguration = DngCmUtil.getConfiguration(client,
-							exportImportInformation.getSource());
-					Configuration targetConfiguration = DngCmUtil.getConfiguration(client,
-							exportImportInformation.getTarget());
-
-					// Create the change set as target for the import.
-					Boolean operationResult = false;
-					Changeset changeSet = new Changeset(client, targetConfiguration);
-					if (changeSet.getAbout() == null) {
-						logger.info("Failed to create change set as import target.");
-						totalResult &= operationResult;
-						continue;
-					}
-					logger.trace("Change set'{}'", changeSet.getAbout().toString());
-					Configuration changeSetConfiguration = DngCmUtil.getConfiguration(client,
-							changeSet.getAbout().toString());
-					if (changeSetConfiguration == null) {
-						totalResult &= operationResult;
-						logger.info("Failed to create change set as import target.");
-						continue;
-					}
-					// Import the type system changes from the source stream into the change set
-					operationResult = DngCmTypeSystemImportSession.performTypeImport(client, sourceConfiguration,
-							changeSetConfiguration);
-					if (!operationResult) {
-						totalResult &= operationResult;
-						logger.info("Failed to Import into change set '{}'.",
-								changeSetConfiguration.getAbout().toString());
-						continue;
-					}
-					String projectAreaServiceProviderUrl = changeSetConfiguration.getServiceProvider().toString();
-					// Deliver the change set with its changes to the target stream
-					operationResult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
-							changeSetConfiguration, targetConfiguration);
-
-					if (!operationResult) {
-						totalResult &= operationResult;
-						logger.info("The delivery has failed or there were no differences to deliver!");
-						Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
-						logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
-								changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
-								deleted.toString());
-						continue;
-					}
-					logger.trace("Result: {}", operationResult.toString());
-					totalResult &= operationResult;
-				}
-				result = totalResult;
+				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
+				scenarioInstance = scenarioService.start(client);
+				result = ConfigurationMappingUtil.importConfigurations(client, configurations);
 				logger.trace("End");
 			}
 		} catch (RootServicesException re) {
@@ -208,6 +157,14 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+		} finally {
+			if(scenarioInstance!=null) {
+				try {
+					scenarioService.stop(client, scenarioInstance);
+				} catch (Exception e) {
+					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
+				}
+			}
 		}
 		return result;
 	}

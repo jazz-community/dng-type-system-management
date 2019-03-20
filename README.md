@@ -1,6 +1,6 @@
 # dng-type-system-management
 
-Type System Manager V1.0
+Type System Manager V1.1
 
 Command line tool to support managing IBM Rational DOORS Next Generation Type Systems.
 
@@ -9,7 +9,8 @@ See  the following material to understand the code.
  *  [Maintaining the Rational DOORS Next Generation type system in a configuration-management-enabled environment. Part 2: Automation](https://jazz.net/library/article/92554)
  *  [Maintaining the Rational DOORS Next Generation type system in a configuration-management-enabled environment. Part 3: Automation tool deep dive](https://jazz.net/library/article/92596)
  
- [Part 1: Manual procedures](https://jazz.net/library/article/92352) explains the best practices backing up the approach. [Part 2: Automation](https://jazz.net/library/article/92554) explains the basics how the automation works, very much like this readme. [Part 3: Automation tool deep dive](https://jazz.net/library/article/92596) is a deep dive in how to get the code, compile the code, build the code, and package releases. It also explains in great detail how the code works.
+ [Part 1: Manual procedures](https://jazz.net/library/article/92352) explains the best practices backing up the approach.
+ *  [Part 2: Automation](https://jazz.net/library/article/92554) explains the basics how the automation works, very much like this readme. [Part 3: Automation tool deep dive](https://jazz.net/library/article/92596) is a deep dive in how to get the code, compile the code, buld the code and package releases. It also explains in great detail how the code works.
  
  Additional information can be found in
  
@@ -18,6 +19,10 @@ See  the following material to understand the code.
  *  [And this query](https://rsjazz.wordpress.com/?s=type-system-manager&submit=Search)
 
 The Type System Manager 
+
+Provides a conmmand **deliverTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then delivers the type system of the source stream to all target streams.
+
+Provides a conmmand **importTypeSystemByDescription** that uses string tags in the description to identify exactly one source stream and one or many target streams. The command then imports the type system of the source stream into all target streams.
 
 Provides a conmmand **exportConfigurations** to export the streams/configurations for components of a project area as target into a source to target mapping CSV file.
 
@@ -39,23 +44,32 @@ Provides a command **deliverTypeSystem** to deliver the changes to a type system
 6. Save the CSV/Excel file.                                                                              
 7. Run the desired command importTypeSystem to import the type system or deliverTypeSystem to deliver the type system changes providing the CSV file as input.
 
-## Automated Workflow
+## Semi Automated Workflow
 
 1. Use and maintain pairs of "tag" strings such as -sourceTag TSDSource_TS1 -targetTag TSDTarget_TS1 in the descriptions of streams
 2. Export the streams/configurations to a CSV file using exportConfigurationsByDescription or exportAllConfigurationsByDescription.
-3. Run the desired command importTypeSystem to import the type system or deliverTypeSystem to deliver the type system changes providing the CSV file as input.
+3. Run the desired command importTypeSystem to import the type system or deliverTypeSystem to deliver the type system changes providing the CSV file as input of a source to target mapping.
 
-## Example parameters:
+## Fully Automated Workflow
 
--command exportConfigurations -url https://clm.example.com:9443/rm -user ralph -password ********** -project "GC JKE Banking (Requirements Management)" -csvfile export.csv -csvDelimiter ";"
+1. Use and maintain pairs of "tag" strings such as -sourceTag TSDSource_TS1 -targetTag TSDTarget_TS1 in the descriptions of streams
+2. Run the desired command importTypeSystemByDescription to import the type system changes, or deliverTypeSystemByDescription to deliver the type system changes from the source configuration to the target configuration.
 
--command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ********** -project "GC JKE Banking (Requirements Management)" -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
+## Call Parameter Examples
 
--command exportAllConfigurationsByDescription -url https://clm.example.com:9443/rm -user ralph -password ********** -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
+-command deliverTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_TS1 -targetTag TSTarget_TS1
 
--command importTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ********** -csvfile TypeSystemImport.csv -csvDelimiter ";"
+-command importTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_TS1 -targetTag TSTarget_TS1
 
--command deliverTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ********** -csvfile TypeSystemDelivery.csv -csvDelimiter ";"
+-command exportConfigurations -url https://clm.example.com:9443/rm -user user -password password -project "GC JKE Banking (Requirements Management)" -csvfile export.csv -csvDelimiter ";"
+
+-command exportConfigurationsByDescription -url https://clm.example.com:9443/rm -user user -password password -project "GC JKE Banking (Requirements Management)" -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
+
+-command exportAllConfigurationsByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_TS1 -targetTag TSTarget_TS1 -csvfile export_description.csv -csvDelimiter ";"
+
+-command importTypeSystem -url https://clm.example.com:9443/rm -user user -password password -csvfile TypeSystemImport.csv -csvDelimiter ";"
+
+-command deliverTypeSystem -url https://clm.example.com:9443/rm -user user -password password -csvfile TypeSystemDelivery.csv -csvDelimiter ";"
 
 ## License
 This software is licensed under the Eclipse Public License: [Eclipse Public License - v 1.0](com.ibm.rm.typemanagement/LICENSE.html)

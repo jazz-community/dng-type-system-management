@@ -47,10 +47,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
+import com.ibm.requirement.typemanagement.oslc.client.automation.util.HeaderRequestInterceptor;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.LoggingUtil;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.RDFUtils;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.TimeStampUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.DngHeaderRequestInterceptor;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.IRequestTracker;
 import com.ibm.requirement.typemanagement.oslc.client.tracking.RequestTrackerImpl;
 
@@ -221,14 +221,14 @@ public class DngCmDeliverySession extends AbstractResource {
 		HashMap<String, String> header = new HashMap<String, String>();
 		header.put(DngTypeSystemManagementConstants.DNG_CM_CONFIGURATION_CONTEXT_HEADER, source.getAbout().toString());
 
-		DngHeaderRequestInterceptor.installRequestInterceptor(client, header);
+		HeaderRequestInterceptor.installRequestInterceptor(client, header);
 
 		ClientResponse response = null;
 		String sessionUrl = null;
 		try {
 			response = client.createResource(deliverySessionFactory.getCreation().toString(), deliverySession,
 					OslcMediaType.APPLICATION_RDF_XML, OSLCConstants.CT_RDF);
-			DngHeaderRequestInterceptor.removeRequestInterceptor(client);
+			HeaderRequestInterceptor.removeRequestInterceptor(client);
 
 			logger.debug("Status: " + response.getStatusCode());
 
