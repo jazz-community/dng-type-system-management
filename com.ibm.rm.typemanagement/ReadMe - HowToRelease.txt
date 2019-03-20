@@ -13,7 +13,7 @@ To Build for usage
    - In 'Export Location' select " a path e.g. 'C:\temp\TSM\tsm.jar' 
      You can change the root for the export if needed but keep the top folder name 
      TSM and don't modify the name of the JAR file; 
-   - In 'Library handling' select 'Package required libraries into generated JAR'
+   - In 'Library handling' select 'Copy required libraries into a sub-folder next to the generated JAR'
    - In the last section you can choose to save the export as an ANT script.
 Click Finish and allow to create the folder.
 7. Copy the content of the projects sub-folder scripts into the export location 
