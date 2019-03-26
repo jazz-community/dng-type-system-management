@@ -148,8 +148,8 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
-				scenarioInstance = scenarioService.start(client);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
 				// Get the URL of the OSLC ChangeManagement catalog
 				String cmCatalogUrl = helper.getCatalogUrl();
 				if (cmCatalogUrl == null) {
@@ -167,13 +167,7 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			if(scenarioInstance!=null) {
-				try {
-					scenarioService.stop(client, scenarioInstance);
-				} catch (Exception e) {
-					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
-				}
-			}
+			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
 		}
 		return result;
 	}

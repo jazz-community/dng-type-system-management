@@ -21,7 +21,7 @@ package com.ibm.requirement.typemanagement.oslc.client.automation;
  */
 public interface DngTypeSystemManagementConstants {
 
-	public static final String version = "1.1";
+	public static final String VERSIONINFO = "1.1";
 
 	// Commands and parameters
 	public static final String PARAMETER_COMMAND = "command";

@@ -49,7 +49,7 @@ public class DngTypeSystemManagement {
 	 */
 	public static void main(String[] args) throws URISyntaxException, ParseException {
 
-		logger.info("\nTypeSystemManager Version: {}", DngTypeSystemManagementConstants.version);
+		logger.info("\nTypeSystemManager Version: {}", DngTypeSystemManagementConstants.VERSIONINFO);
 		DngTypeSystemManagement tsm = new DngTypeSystemManagement();
 
 		boolean result = tsm.execute(args);

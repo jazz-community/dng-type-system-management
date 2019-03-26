@@ -147,8 +147,8 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 				if (configurations == null) {
 					return result;
 				}
-				scenarioService = new ExpensiveScenarioService(webContextUrl, getCommandName()+"Scenario");
-				scenarioInstance = scenarioService.start(client);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
 				result = ConfigurationMappingUtil.importConfigurations(client, configurations);
 				logger.trace("End");
 			}
@@ -158,13 +158,7 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			if(scenarioInstance!=null) {
-				try {
-					scenarioService.stop(client, scenarioInstance);
-				} catch (Exception e) {
-					logger.trace("Failed to stop resource intensive scenario '{}'", scenarioInstance);
-				}
-			}
+			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
 		}
 		return result;
 	}

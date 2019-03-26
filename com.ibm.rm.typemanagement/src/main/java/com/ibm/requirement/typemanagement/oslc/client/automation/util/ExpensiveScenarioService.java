@@ -35,6 +35,9 @@ import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
+import com.ibm.requirement.typemanagement.oslc.client.automation.commands.DeliverTypeSystemByDescriptionCmd;
+
 public class ExpensiveScenarioService implements IExpensiveScenarioService {
 
 
@@ -229,6 +232,61 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	@Override
 	public Object getScenarioName() {
 		return fScenarioName;
+	}
+	/**
+	 * Stop a Resource Intensive Scenario instance
+	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
+	 * 
+	 * Wrap all errors
+	 * 
+	 * @param scenarioInstance
+	 */
+	public static void stopScenario(JazzFormAuthClient client, IExpensiveScenarioService scenarioService, String scenarioInstance) {
+		try {
+			scenarioService.stop(client, scenarioInstance);
+		} catch (Exception e) {
+			DeliverTypeSystemByDescriptionCmd.logger.trace("Resource Intensive Scenario Notifier Service: Scenario can not be stopped!");
+		}
+	}
+	/**
+	 * Start a Resource Intensive Scenario instance
+	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
+	 * 
+	 * Wrap all errors
+	 * 
+	 * @param client
+	 * @param webContextUrl
+	 * @param commandName
+	 * @return
+	 */
+	public static String startScenario(JazzFormAuthClient client, IExpensiveScenarioService scenarioService) {
+		String scenarioInstance=null;	
+		try {
+			scenarioInstance = scenarioService.start(client);
+		} catch (Exception e) {
+			DeliverTypeSystemByDescriptionCmd.logger.trace("Resource Intensive Scenario Notifier Service: Scenario can not be started!");
+		}
+		return scenarioInstance;
+	}
+	/**
+	 * Create a Resource Intensive Scenario instance
+	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
+	 * 
+	 * Wrap all errors
+	 * 
+	 * @param client
+	 * @param webContextUrl
+	 * @param commandName
+	 * @return
+	 */
+	public static IExpensiveScenarioService createScenarioService(JazzFormAuthClient client, String webContextUrl, String commandName) {
+		IExpensiveScenarioService scenarioService = null;	
+		try {
+			scenarioService = new ExpensiveScenarioService(webContextUrl, "TSM " + DngTypeSystemManagementConstants.VERSIONINFO + " Command " + commandName);
+		} catch (Exception e) {
+			DeliverTypeSystemByDescriptionCmd.logger.trace("Resource Intensive Scenario Notifier Service: Scenario can not be started!");
+		}
+		return scenarioService;
 	}
 
 }
