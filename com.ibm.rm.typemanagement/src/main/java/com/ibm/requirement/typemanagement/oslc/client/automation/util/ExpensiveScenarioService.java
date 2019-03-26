@@ -40,8 +40,6 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.commands.Delive
 
 public class ExpensiveScenarioService implements IExpensiveScenarioService {
 
-
-
 	public static final Logger logger = LoggerFactory.getLogger(ExpensiveScenarioService.class);
 
 	private static final String EXPENSIVE_SCENARIO_START_PATH = "/service/com.ibm.team.repository.service.serviceability.IScenarioRestService/scenarios/startscenario";
