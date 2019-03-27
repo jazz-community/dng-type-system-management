@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -86,7 +86,8 @@ public class ExportAllConfigurationsByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams in to create a mapping and exports the information into a CSV file.");		
+		logger.info(
+				"\n\tUses string tags in the description to identify a source stream and one or many target streams in to create a mapping and exports the information into a CSV file.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -136,8 +137,8 @@ public class ExportAllConfigurationsByDescriptionCmd extends AbstractCommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
-		String scenarioInstance=null;
+		IExpensiveScenarioService scenarioService = null;
+		String scenarioInstance = null;
 		try {
 
 			// Login
@@ -147,8 +148,9 @@ public class ExportAllConfigurationsByDescriptionCmd extends AbstractCommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
 						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
 				if (configurationList != null) {
@@ -167,7 +169,7 @@ public class ExportAllConfigurationsByDescriptionCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}

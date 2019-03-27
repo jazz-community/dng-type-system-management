@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -86,7 +86,8 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tReads a CSV file with a source to target mapping of configurations. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");		
+		logger.info(
+				"\n\tReads a CSV file with a source to target mapping of configurations. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -126,8 +127,8 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
-		String scenarioInstance=null;
+		IExpensiveScenarioService scenarioService = null;
+		String scenarioInstance = null;
 		try {
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
@@ -147,8 +148,9 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 				if (configurations == null) {
 					return result;
 				}
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				result = ConfigurationMappingUtil.importConfigurations(client, configurations);
 				logger.trace("End");
 			}
@@ -158,7 +160,7 @@ public class ImportTypeSystemCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}

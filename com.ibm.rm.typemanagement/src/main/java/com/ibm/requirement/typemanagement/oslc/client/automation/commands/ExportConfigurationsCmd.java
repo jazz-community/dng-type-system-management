@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -83,7 +83,8 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tFinds all editable configurations of a project area and exports the information into a CSV file.");		
+		logger.info(
+				"\n\tFinds all editable configurations of a project area and exports the information into a CSV file.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -129,8 +130,8 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
-		String scenarioInstance=null;
+		IExpensiveScenarioService scenarioService = null;
+		String scenarioInstance = null;
 		try {
 
 			// Login
@@ -140,8 +141,9 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
 						.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
 				if (configurationList != null) {
@@ -160,7 +162,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}

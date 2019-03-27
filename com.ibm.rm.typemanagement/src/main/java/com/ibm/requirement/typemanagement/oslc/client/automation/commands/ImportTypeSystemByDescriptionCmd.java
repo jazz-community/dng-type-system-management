@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -80,7 +80,8 @@ public class ImportTypeSystemByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");
+		logger.info(
+				"\n\tUses string tags in the description to identify a source stream and one or many target streams. For each target stream, it imports the type system changes of the source stream into a new changes set and delivers the change to the target streams.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -118,8 +119,8 @@ public class ImportTypeSystemByDescriptionCmd extends AbstractCommand {
 		String targetTag = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
-		String scenarioInstance=null;
+		IExpensiveScenarioService scenarioService = null;
+		String scenarioInstance = null;
 		try {
 
 			// Login
@@ -129,8 +130,9 @@ public class ImportTypeSystemByDescriptionCmd extends AbstractCommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				List<CsvExportImportInformation> configurations = ConfigurationMappingUtil
 						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
 				if (configurations != null) {
@@ -142,7 +144,7 @@ public class ImportTypeSystemByDescriptionCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}

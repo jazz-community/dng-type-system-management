@@ -30,10 +30,10 @@ import org.slf4j.LoggerFactory;
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ICommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -86,7 +86,8 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tReads a CSV file with a source to target mapping of configurations. Delivers the type system of the source configurations to the target configuration.");		
+		logger.info(
+				"\n\tReads a CSV file with a source to target mapping of configurations. Delivers the type system of the source configurations to the target configuration.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -127,8 +128,8 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
-		String scenarioInstance=null;
+		IExpensiveScenarioService scenarioService = null;
+		String scenarioInstance = null;
 		try {
 			// Import the data
 			CsvUtil csv = new CsvUtil();
@@ -148,8 +149,9 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				// Get the URL of the OSLC ChangeManagement catalog
 				String cmCatalogUrl = helper.getCatalogUrl();
 				if (cmCatalogUrl == null) {
@@ -167,7 +169,7 @@ public class DeliverTypeSystemCmd extends AbstractCommand implements ICommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}

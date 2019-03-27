@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagementConstants;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.ExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.IExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 
 /**
@@ -80,7 +80,8 @@ public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 	@Override
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
-		logger.info("\n\tUses string tags in the description to identify a source stream and one or many target streams. Delivers the type system of the source stream to all target streams.");
+		logger.info(
+				"\n\tUses string tags in the description to identify a source stream and one or many target streams. Delivers the type system of the source stream to all target streams.");
 		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
@@ -118,7 +119,7 @@ public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 		String targetTag = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_TARGET_TAG);
 
 		JazzFormAuthClient client = null;
-		IExpensiveScenarioService scenarioService=null;
+		IExpensiveScenarioService scenarioService = null;
 		String scenarioInstance = null;
 		try {
 			// Login
@@ -128,8 +129,9 @@ public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 			client = helper.initFormClient(user, passwd, authUrl);
 
 			if (client.login() == HttpStatus.SC_OK) {
-				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl, getCommandName());
-				scenarioInstance = ExpensiveScenarioService.startScenario(client, scenarioService);
+				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
+						getCommandName());
+				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				List<CsvExportImportInformation> configurations = ConfigurationMappingUtil
 						.getEditableConfigurationMappingBydescriptionTag(client, helper, sourceTag, targetTag);
 				if (configurations != null) {
@@ -141,9 +143,9 @@ public class DeliverTypeSystemByDescriptionCmd extends AbstractCommand {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
-			ExpensiveScenarioService.stopScenario(client, scenarioService, scenarioInstance);
+			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
 	}
-	
+
 }

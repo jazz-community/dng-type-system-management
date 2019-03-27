@@ -317,9 +317,8 @@ public class ConfigurationMappingUtil {
 		for (CsvExportImportInformation exportImportInformation : configurations) {
 			ImportTypeSystemCmd.logger
 					.info("-----------------------------------------------------------------------------");
-			ImportTypeSystemCmd.logger.info("Import from '{}' to '{}' ",
-					exportImportInformation.getProjectAreaName(), exportImportInformation.getSource(),
-					exportImportInformation.getTarget());
+			ImportTypeSystemCmd.logger.info("Import from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
+					exportImportInformation.getSource(), exportImportInformation.getTarget());
 
 			// Get the source and the target configuration
 			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getSource());

@@ -96,7 +96,7 @@ public class SampleCommandCmd extends AbstractCommand implements ICommand {
 		//
 		// Example code
 		logger.info("{}", getCommandName());
-		logger.info("\n\tA sample command that can be used as template for adding custom commands.");		
+		logger.info("\n\tA sample command that can be used as template for adding custom commands.");
 		logger.info("\n\tSyntax : -{} {} -{} {} [ -{} {} ]", DngTypeSystemManagementConstants.PARAMETER_COMMAND,
 				getCommandName(), DngTypeSystemManagementConstants.PARAMETER_SAMPLE_OPTION,
 				DngTypeSystemManagementConstants.PARAMETER_SAMPLE_OPTION_PROTOTYPE,
