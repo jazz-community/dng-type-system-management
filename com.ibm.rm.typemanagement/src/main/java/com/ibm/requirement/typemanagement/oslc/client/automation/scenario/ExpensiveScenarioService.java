@@ -296,7 +296,7 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 		IExpensiveScenarioService scenarioService = null;
 		try {
 			scenarioService = new ExpensiveScenarioService(client, webContextUrl,
-					toolName + " " + versionInfo + " " + commandName);
+					toolName + "_" + versionInfo + "_" + commandName);
 		} catch (Exception e) {
 			logger.trace("Resource Intensive Scenario Notifier Service: Scenario can not be started!");
 		}
