@@ -57,9 +57,9 @@ The Type System Manager provides the following commands
 
 ## Call Parameter Examples
 
--command deliverTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_TS1 -targetTag TSTarget_TS1
+-command deliverTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_DTS1 -targetTag TSTarget_DTS1
 
--command importTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_TS1 -targetTag TSTarget_TS1
+-command importTypeSystemByDescription -url https://clm.example.com:9443/rm -user user -password password -sourceTag TSSource_ITS1 -targetTag TSTarget_ITS1
 
 -command exportConfigurations -url https://clm.example.com:9443/rm -user user -password password -project "GC JKE Banking (Requirements Management)" -csvfile export.csv -csvDelimiter ";"
 
