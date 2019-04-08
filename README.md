@@ -52,7 +52,7 @@ The Type System Manager provides the following commands
 
 ## Fully Automated Workflow
 
-1. Use and maintain pairs of "tag" strings such as -sourceTag TSDSource_TS1 -targetTag TSDTarget_TS1 in the descriptions of streams
+1. Use and maintain pairs of "tag" strings such as -sourceTag TSSource_DTS1 -targetTag TSTarget_DTS1 in the descriptions of streams
 2. Run the desired command importTypeSystemByDescription to import the type system changes, or deliverTypeSystemByDescription to deliver the type system changes from the source configuration to the target configuration.
 
 ## Call Parameter Examples
