@@ -168,6 +168,10 @@ public class ConfigurationMappingUtil {
 		// area is CM enabled
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
+		if (rmProjectAreaOslcServiceProvider == null) {
+			ExportConfigurationsByDescriptionCmd.logger.error("Unable to find project area '{}'");
+			return null;
+		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
 			ExportConfigurationsByDescriptionCmd.logger.error("Unable to find project area service provider for '{}'",
 					projectAreaName);
@@ -264,6 +268,11 @@ public class ConfigurationMappingUtil {
 
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
+		if (rmProjectAreaOslcServiceProvider == null) {
+			ExportConfigurationsCmd.logger.error("Unable to find project '{}'",
+					projectAreaName);
+			return null;
+		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
 			ExportConfigurationsCmd.logger.error("Unable to find project area service provider for '{}'",
 					projectAreaName);

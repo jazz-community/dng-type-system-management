@@ -106,7 +106,14 @@ public class ProjectAreaOslcServiceProvider {
 		if (projectArea == null) {
 			projectArea = "";
 		}
-		String projectAreaServiceProviderUrl = client.lookupServiceProviderUrl(oslcCatalogUrl, projectArea);
+		String projectAreaServiceProviderUrl=null;
+		try{
+			projectAreaServiceProviderUrl = client.lookupServiceProviderUrl(oslcCatalogUrl, projectArea);
+		} catch (Exception e) {
+			String message = "Unable to find project area \"" + projectArea + "\"";
+			logger.error(message);
+			return null; // throw e; 
+		}
 		ProjectAreaOslcServiceProvider projectAreaOslcService = new ProjectAreaOslcServiceProvider(
 				projectAreaServiceProviderUrl, projectArea);
 		return projectAreaOslcService;
