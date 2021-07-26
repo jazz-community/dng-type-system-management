@@ -2,3 +2,4 @@ com.ibm.rm.typemanagement/log4j/*.out
 *.out
 *.csv
 *.class
+/bin/
