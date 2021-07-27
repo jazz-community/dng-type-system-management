@@ -144,6 +144,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
 						getCommandName());
 				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
+				logger.info("Getting Configurations");
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
 						.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
 				if (configurationList != null) {
