@@ -130,4 +130,6 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CM_SERVICE_PROVIDER_PROPERTY_NAME = "cmServiceProviders";
 	public static final String PROCESS_NAMESPACE_PROPERTY_PROJECT_AREA = "projectArea";
 
+	public static final String CMD_ARCHIVE_CONFIGURATIONS = "archiveConfigurations";
+
 }

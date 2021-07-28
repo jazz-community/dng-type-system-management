@@ -45,6 +45,7 @@ public class CommandFactory {
 		put(new DeliverTypeSystemCmd());
 		put(new ImportTypeSystemByDescriptionCmd());
 		put(new DeliverTypeSystemByDescriptionCmd());
+		put(new ArchiveConfigurationsCmd());
 		// Enable sample command
 		// put(new SampleCommandCmd());
 	}
