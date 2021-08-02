@@ -54,12 +54,13 @@ import net.oauth.OAuthException;
  */
 public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
+	private static final int REPORT_PROGRESS_SIZE = 10;
 	public static final Logger logger = LoggerFactory.getLogger(AnalyzeConfigurationsCmd.class);
-	private int itemcount=0;
-	private int maxcount=-1;
-	private PrintWriter fWriter=null;
+	private int itemcount = 0;
+	private int maxcount = -1;
+	private PrintWriter fWriter = null;
 	private String fDelimiter = ";";
-	
+
 	/**
 	 * Create new command and give it the name
 	 */
@@ -154,12 +155,12 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		String projectAreaName = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA);
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
-		String maxProcessItems = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT);
-		if(maxProcessItems!=null){
-			maxcount = Integer.valueOf(maxProcessItems);			
+		String maxProcessItems = getCmd()
+				.getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT);
+		if (maxProcessItems != null) {
+			maxcount = Integer.valueOf(maxProcessItems);
 		}
-		
-		
+
 		fDelimiter = csvDelimiter;
 		JazzFormAuthClient client = null;
 		IExpensiveScenarioService scenarioService = null;
@@ -179,14 +180,14 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 				createWriter(csvFilePath);
 				getHeader();
 
-				analyzeConfigurations(client,helper, projectAreaName);
+				analyzeConfigurations(client, helper, projectAreaName);
 
 				fWriter.flush();
 				fWriter.close();
-				result=true;
+				result = true;
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		} finally {
 			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
@@ -194,7 +195,8 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		return result;
 	}
 
-	private Object analyzeConfigurations(JazzFormAuthClient client, JazzRootServicesHelper helper, String projectAreaName) throws ResourceNotFoundException, URISyntaxException, IOException, OAuthException {
+	private Object analyzeConfigurations(JazzFormAuthClient client, JazzRootServicesHelper helper,
+			String projectAreaName) throws ResourceNotFoundException, URISyntaxException, IOException, OAuthException {
 		logger.info("Analyzing Configurations");
 		// Get the URL of the OSLC ChangeManagement catalog
 		String catalogUrl = helper.getCatalogUrl();
@@ -208,13 +210,11 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 		if (rmProjectAreaOslcServiceProvider == null) {
-			logger.error("Unable to find project '{}'",
-					projectAreaName);
+			logger.error("Unable to find project '{}'", projectAreaName);
 			return null;
 		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			logger.error("Unable to find project area service provider for '{}'",
-					projectAreaName);
+			logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 			return null;
 		}
 
@@ -228,143 +228,149 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
 	private boolean analyzeComponents(JazzFormAuthClient client, Collection<Component> components)
 			throws IOException, OAuthException, URISyntaxException {
-		//Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
+		// Collection<Configuration> configurations =
+		// DngCmUtil.getConfigurationsForComponents(client, components);
 		for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
 			Component component = (Component) iterator.next();
-			if(!analyzeComponent(client, component)){
+			if (!analyzeComponent(client, component)) {
 				return false; // cap
 			}
 		}
 		return true;
 	}
 
-	
-	private boolean analyzeComponent(JazzFormAuthClient client, Component component) throws IOException, OAuthException, URISyntaxException {
+	private boolean analyzeComponent(JazzFormAuthClient client, Component component)
+			throws IOException, OAuthException, URISyntaxException {
 
-		
-		String message = componentAsString(component);
+		String message = componentAsString(component, "\t");
 		logger.info(message);
 		Collection<Configuration> configurations = DngCmUtil.getComponentConfigurations(client, component);
 		for (Configuration configuration : configurations) {
-			if(! doKeepGoing()){
+			if (!doKeepGoing()) {
 				return false;
 			}
-			String confMessage = configurationAsString(configuration, "\t");
-			writeColumn(component,configuration);
-			//DngCmUtil.createChangeSet(client, configuration);
+			String confMessage = configurationAsString(configuration, "\t\t");
+			writeColumn(component, configuration);
+			// DngCmUtil.createChangeSet(client, configuration);
 			logger.info(confMessage);
 		}
 		return true;
 	}
 
 	private void writeColumn(Component component, Configuration configuration) {
-		// TODO Auto-generated method stub
-        StringBuilder sb = new StringBuilder();
-        sb.append(getString(configuration.getIdentifier()));
-        sb.append(fDelimiter);
-        sb.append(getConfigurationType(configuration));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getAbout()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getTitle()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getDescription()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getCreated()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getCreator()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getWasDerivedFrom()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getBaselineOfStream()));
-        sb.append(fDelimiter);
-        sb.append(getString(configuration.getPreviousBaseline()));
-        sb.append(fDelimiter);
-        
-        sb.append(getString(component.getAbout()));
-        sb.append(fDelimiter);
-        sb.append(getString(component.getTitle()));
-        sb.append(fDelimiter);
-        sb.append(getString(component.getDescription()));
-        sb.append(fDelimiter);
-        sb.append(getString(component.getProjectArea()));
-        sb.append('\n');
-        fWriter.write(sb.toString());
-	}
-	
-	private String getHeader(){
-		
-        StringBuilder sb = new StringBuilder();
-     
-        sb.append("Configuration ID");
-        sb.append(fDelimiter);
-        sb.append("Configuration Type");
-        sb.append(fDelimiter);		
-        sb.append("Configuration URI");
-        sb.append(fDelimiter);
-        sb.append("Configuration Title");
-        sb.append(fDelimiter);
-        sb.append("Configuration Description");
-        sb.append(fDelimiter);
-        sb.append("Configuration Created");
-        sb.append(fDelimiter);
-        sb.append("Configuration Creator");
-        sb.append(fDelimiter);
-        sb.append("Configuration Was Derived From");
-        sb.append(fDelimiter);
-        sb.append("Configuration Baseline Of Stream");
-        sb.append(fDelimiter);
-        sb.append("Configuration Previous Baseline");
-        sb.append(fDelimiter);
-        sb.append("Component URI");
-        sb.append(fDelimiter);
-        sb.append("Component Title");
-        sb.append(fDelimiter);
-        sb.append("Component Description");
-        sb.append(fDelimiter);
-        sb.append("Component ProjectArea");
-        sb.append('\n');
-        fWriter.write(sb.toString());
+		StringBuilder sb = new StringBuilder();
+		sb.append(getString(configuration.getIdentifier()));
+		sb.append(fDelimiter);
+		sb.append("\""+getConfigurationType(configuration)+"\"");
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getAbout()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getTitle()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getDescription()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getCreated()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getCreator()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getWasDerivedFrom()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getBaselineOfStream()));
+		sb.append(fDelimiter);
+		sb.append(getString(configuration.getPreviousBaseline()));
+		sb.append(fDelimiter);
 
-        return sb.toString();		
+		sb.append(getString(component.getAbout()));
+		sb.append(fDelimiter);
+		sb.append(getString(component.getTitle()));
+		sb.append(fDelimiter);
+		sb.append(getString(component.getDescription()));
+		sb.append(fDelimiter);
+		sb.append(getString(component.getProjectArea()));
+		sb.append("\n");
+		fWriter.write(sb.toString());
+	}
+
+	private String getHeader() {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(getString("Configuration ID"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Type"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration URI"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Title"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Description"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Created"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Creator"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Was Derived From"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Baseline Of Stream"));
+		sb.append(fDelimiter);
+		sb.append(getString("Configuration Previous Baseline"));
+		sb.append(fDelimiter);
+		sb.append(getString("Component URI"));
+		sb.append(fDelimiter);
+		sb.append(getString("Component Title"));
+		sb.append(fDelimiter);
+		sb.append(getString("Component Description"));
+		sb.append(fDelimiter);
+		sb.append(getString("Component ProjectArea"));
+		sb.append("\n");
+		fWriter.write(sb.toString());
+		return sb.toString();
 	}
 
 	private String getString(Date date) {
-		if(date==null){
-			return "";
+		if (date == null) {
+			return "\"\"";
 		}
-		return TimeStampUtil.getDate(date);
+		return getString(TimeStampUtil.getDate(date));
 	}
 
 	private String getString(URI uri) {
-		if(uri==null){
-			return "";
+		if (uri == null) {
+			return "\"\"";
 		}
 		return getString(uri.toString());
 	}
 
 	private String getString(String value) {
-		if(value!=null){
-			return value;
+		if (value != null) {
+			return "\""+removeDelimiter(value)+"\"";
 		}
-		return null;
+		return "\"\"";
 	}
 
-	private void analyzeConfiguration(JazzFormAuthClient client, Configuration configuration) throws IOException, OAuthException, URISyntaxException {
+	private String removeDelimiter(String value) {
+		if (value.contains(fDelimiter)) {
+			logger.info("Delimiter detected in \'" + value + "'");
+			return value.replace(fDelimiter, "-");
+		}
+		return value;
+	}
+
+	private void analyzeConfiguration(JazzFormAuthClient client, Configuration configuration)
+			throws IOException, OAuthException, URISyntaxException {
 		configuration.getAbout();
 	}
-	
-	
+
 	private String configurationAsString(Configuration configuration) {
 		return configurationAsString(configuration, null);
 	}
-	
+
 	private String configurationAsString(Configuration configuration, String prefix) {
-		if(prefix==null){
+		if (prefix == null) {
 			prefix = "";
 		}
 		String confIdentifier = configuration.getIdentifier();
-		//String confType_ = configuration.getType().toString(); 
+		// String confType_ = configuration.getType().toString();
 		URI baselineOfStream = configuration.getBaselineOfStream();
 		URI overrides = configuration.getOverrides();
 		URI prevBaseline = configuration.getPreviousBaseline();
@@ -373,20 +379,30 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		String confTitle = configuration.getTitle();
 		String confDescription = configuration.getDescription();
 		String confURI = configuration.getAbout().toString();
-		String confType = getConfigurationType(configuration); 
-		
-		String confMessage = prefix + confType + " " + confIdentifier + " '" + confTitle + "' '" + confDescription + "' "  + confURI + "";
+		String confType = getConfigurationType(configuration);
+
+		String confMessage = prefix + " " + confIdentifier + "\t" + confType + " '" + confTitle + "'"; // "'
+																								// '"
+																								// +
+																								// confDescription
+																								// +
+																								// "'
+																								// "
+																								// +
+																								// confURI
+																								// +
+																								// "";
 		return confMessage;
 	}
 
 	private String getConfigurationType(Configuration configuration) {
-		String  confType= "unknown   \t";
-		if(configuration.isStream()){
-			    confType = "Stream   \t";
-		} else if(configuration.isBaseline()){
-			confType = "Baseline \t";
-		} else if(configuration.isChangeset()){
-			confType = "Changeset\t";
+		String confType = "unknown";
+		if (configuration.isStream()) {
+			confType = "Stream";
+		} else if (configuration.isBaseline()) {
+			confType = "Baseline";
+		} else if (configuration.isChangeset()) {
+			confType = "Changeset";
 		}
 		return confType;
 	}
@@ -396,38 +412,37 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 	}
 
 	private String componentAsString(Component component, String prefix) {
-		if(prefix==null){
+		if (prefix == null) {
 			prefix = "";
 		}
-		//String compIdentifier = component.getIdentifier();
-		String compTitle=component.getTitle();
-		String compURI=component.getAbout().toString();
-		String compPaURI=component.getProjectArea().toString();
-		String compServiceProvider=component.getServiceProvider().toString();
+		// String compIdentifier = component.getIdentifier();
+		String compTitle = component.getTitle();
+		String compURI = component.getAbout().toString();
+		String compPaURI = component.getProjectArea().toString();
+		String compServiceProvider = component.getServiceProvider().toString();
 		String compDescription = component.getDescription();
 		String message = prefix + "Component '" + compTitle + " '" + compDescription + "' " + compURI + "";
 		return message;
 	}
 
-	private boolean doKeepGoing(){
-		int showProgress = ++itemcount % 10;
-		if(showProgress == 0){
-			logger.info("Processed items:" + Integer.valueOf(itemcount));
+	private boolean doKeepGoing() {
+		int showProgress = ++itemcount % REPORT_PROGRESS_SIZE;
+		if (showProgress == 0) {
+			logger.info(TimeStampUtil.getTimestamp() + " Processed items:" + Integer.valueOf(itemcount));
 		}
-		if(itemcount<=maxcount){
+		if (itemcount < maxcount) {
 			return true;
 		}
 		// If maxcount smaller than 0 we execute limitless
-		if(maxcount<0){
+		if (maxcount < 0) {
 			return true;
 		}
 		logger.info("Exceeded processed items limit. Items processed: " + Integer.valueOf(itemcount));
 		return false;
 	}
-	
-	private void createWriter(String fileName) throws FileNotFoundException, UnsupportedEncodingException{
-		fWriter = new PrintWriter(new File(fileName),"UTF-8");
+
+	private void createWriter(String fileName) throws FileNotFoundException, UnsupportedEncodingException {
+		fWriter = new PrintWriter(new File(fileName), "UTF-8");
 	}
 
-	
 }

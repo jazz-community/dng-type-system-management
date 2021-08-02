@@ -97,7 +97,8 @@ public class JsonUtils {
 		ClientResponse response = null;
 		try {
 			response = client.getResource(uri, requestHeaders);
-			// logger.info(" RawResponse '{}'", RDFUtils.getRawResponse(response));
+			// logger.info(" RawResponse '{}'",
+			// RDFUtils.getRawResponse(response));
 			InputStream input = response.getEntity(InputStream.class);
 
 			// Create JsonReader object

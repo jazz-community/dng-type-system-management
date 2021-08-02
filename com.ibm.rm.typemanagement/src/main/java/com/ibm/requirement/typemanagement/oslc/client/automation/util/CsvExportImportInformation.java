@@ -31,14 +31,14 @@ public class CsvExportImportInformation {
 
 	@CsvBindByName
 	private String source;
-//	@CsvBindByName
-//	private String sourceTitle;
-//	@CsvBindByName
-//	private String sourceDescription;
-//	@CsvBindByName
-//	private String sourceComponent;
-//	@CsvBindByName
-//	private String sourceComponentName;
+	// @CsvBindByName
+	// private String sourceTitle;
+	// @CsvBindByName
+	// private String sourceDescription;
+	// @CsvBindByName
+	// private String sourceComponent;
+	// @CsvBindByName
+	// private String sourceComponentName;
 	@CsvBindByName
 	private String target;
 	@CsvBindByName
@@ -47,8 +47,8 @@ public class CsvExportImportInformation {
 	private String targetDescription;
 	@CsvBindByName
 	private String targetComponentName;
-//	@CsvBindByName
-//	private String targetComponent;
+	// @CsvBindByName
+	// private String targetComponent;
 	@CsvBindByName
 	private String projectAreaName;
 
@@ -72,27 +72,27 @@ public class CsvExportImportInformation {
 		this.projectAreaName = projectAreaName;
 		if (source != null) {
 			this.source = source.getAbout().toString();
-//			this.sourceTitle = source.getTitle();
-//			this.sourceDescription = source.getDescription();
-//			this.sourceComponent = source.getComponent().toString();
-//			this.sourceComponentName = source.getComponentName();
+			// this.sourceTitle = source.getTitle();
+			// this.sourceDescription = source.getDescription();
+			// this.sourceComponent = source.getComponent().toString();
+			// this.sourceComponentName = source.getComponentName();
 		}
 		if (target != null) {
 			this.target = target.getAbout().toString();
 			this.targetTitle = target.getTitle();
 			this.targetDescription = target.getDescription();
-//			this.targetComponent = target.getComponent().toString();
+			// this.targetComponent = target.getComponent().toString();
 			this.targetComponentName = target.getComponentName();
 		}
 	}
 
-//	public String getTargetComponent() {
-//		return targetComponent;
-//	}
+	// public String getTargetComponent() {
+	// return targetComponent;
+	// }
 
-//	public void setTargetComponent(String targetComponent) {
-//		this.targetComponent = targetComponent;
-//	}
+	// public void setTargetComponent(String targetComponent) {
+	// this.targetComponent = targetComponent;
+	// }
 
 	public String getTargetComponentName() {
 		return targetComponentName;
@@ -110,21 +110,21 @@ public class CsvExportImportInformation {
 		this.source = source;
 	}
 
-//	public String getSourceTitle() {
-//		return sourceTitle;
-//	}
-//
-//	public void setSourceTitle(String sourceTitle) {
-//		this.sourceTitle = sourceTitle;
-//	}
-//
-//	public String getSourceDescription() {
-//		return sourceDescription;
-//	}
-//
-//	public void setSourceDescription(String sourceDescription) {
-//		this.sourceDescription = sourceDescription;
-//	}
+	// public String getSourceTitle() {
+	// return sourceTitle;
+	// }
+	//
+	// public void setSourceTitle(String sourceTitle) {
+	// this.sourceTitle = sourceTitle;
+	// }
+	//
+	// public String getSourceDescription() {
+	// return sourceDescription;
+	// }
+	//
+	// public void setSourceDescription(String sourceDescription) {
+	// this.sourceDescription = sourceDescription;
+	// }
 
 	public String getTarget() {
 		return target;

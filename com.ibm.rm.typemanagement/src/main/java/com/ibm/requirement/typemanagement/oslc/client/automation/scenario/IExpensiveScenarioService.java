@@ -34,7 +34,8 @@ public interface IExpensiveScenarioService {
 	/**
 	 * Stop the expensive scenario.
 	 * 
-	 * @param startRequestResponse the response string from the start command
+	 * @param startRequestResponse
+	 *            the response string from the start command
 	 * @throws Exception
 	 */
 	public void stop(final String startRequestResponse) throws Exception;

@@ -44,12 +44,12 @@ public class Component extends AbstractResource {
 
 	private String title;
 	private String identifier;
-	private String description;	
+	private String description;
 	private URI serviceProvider;
 	private URI configurations;
 	private URI projectArea;
 	private URI accessContext;
-	
+
 	public Component() {
 		super();
 	}
@@ -81,11 +81,10 @@ public class Component extends AbstractResource {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-//	public void setIdentifier(String identifier) {
-//		this.identifier = identifier;
-//	}
 
+	// public void setIdentifier(String identifier) {
+	// this.identifier = identifier;
+	// }
 
 	@OslcDescription("A name for the component.")
 	@OslcTitle("Title")
@@ -131,7 +130,7 @@ public class Component extends AbstractResource {
 	public URI getAccessContext() {
 		return accessContext;
 	}
-	
+
 	@OslcDescription("A description.")
 	@OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "description")
 	@OslcReadOnly
@@ -141,14 +140,14 @@ public class Component extends AbstractResource {
 	public String getDescription() {
 		return description;
 	}
-	
-//	@OslcDescription("An unique identifyer for the object.")
-//	@OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier")
-//	@OslcReadOnly
-//	@OslcOccurs(Occurs.ExactlyOne)
-//	@OslcTitle("Identifier")
-//	@OslcValueType(ValueType.XMLLiteral)
-//	public String getIdentifier() {
-//		return identifier;
-//	}
+
+	// @OslcDescription("An unique identifyer for the object.")
+	// @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier")
+	// @OslcReadOnly
+	// @OslcOccurs(Occurs.ExactlyOne)
+	// @OslcTitle("Identifier")
+	// @OslcValueType(ValueType.XMLLiteral)
+	// public String getIdentifier() {
+	// return identifier;
+	// }
 }

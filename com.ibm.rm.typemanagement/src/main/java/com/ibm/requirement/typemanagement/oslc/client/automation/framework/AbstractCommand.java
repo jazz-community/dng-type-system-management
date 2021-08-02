@@ -34,7 +34,8 @@ public abstract class AbstractCommand implements ICommand {
 	private String commandName;
 
 	/**
-	 * @param commandName name of the command
+	 * @param commandName
+	 *            name of the command
 	 */
 	public AbstractCommand(final String commandName) {
 		super();
@@ -49,8 +50,8 @@ public abstract class AbstractCommand implements ICommand {
 	}
 
 	/**
-	 * @return the name of the command. This is used to find the command that needs
-	 *         to be called.
+	 * @return the name of the command. This is used to find the command that
+	 *         needs to be called.
 	 */
 	public String getCommandName() {
 		return this.commandName;
@@ -104,8 +105,8 @@ public abstract class AbstractCommand implements ICommand {
 	public abstract void printSyntax();
 
 	/**
-	 * Execute the command. Implement this method to create the desired behavior.
-	 * Method to be implemented in subclasses.
+	 * Execute the command. Implement this method to create the desired
+	 * behavior. Method to be implemented in subclasses.
 	 * 
 	 * @return
 	 */

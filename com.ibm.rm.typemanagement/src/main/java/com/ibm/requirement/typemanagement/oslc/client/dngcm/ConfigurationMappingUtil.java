@@ -43,8 +43,8 @@ public class ConfigurationMappingUtil {
 	public static final Logger logger = LoggerFactory.getLogger(ConfigurationMappingUtil.class);
 
 	/**
-	 * Get the source to target mapping for editable configurations for al project
-	 * areas based on source and target description tag.
+	 * Get the source to target mapping for editable configurations for al
+	 * project areas based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -84,11 +84,11 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export
-	 * to prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the
+	 * export to prepare writing to CSV.
 	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified by a rule.
+	 * We are only interested in streams and the streams description must
+	 * contain a tag specified by a rule.
 	 * 
 	 * @param configurations
 	 * @param projectArea
@@ -131,8 +131,8 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Get the source to target mapping for editable configurations for a project
-	 * area based on source and target description tag.
+	 * Get the source to target mapping for editable configurations for a
+	 * project area based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -155,12 +155,12 @@ public class ConfigurationMappingUtil {
 		// Get the OSLC CM Service Provider
 		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 		if (cmCatalogUrl == null) {
-			logger
-					.error("Unable to access the OSLC Configuration Management Provider URL");
+			logger.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
 
-		// Find the OSLC service provider for the project area - assuming the project
+		// Find the OSLC service provider for the project area - assuming the
+		// project
 		// area is CM enabled
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
@@ -169,8 +169,7 @@ public class ConfigurationMappingUtil {
 			return null;
 		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			logger.error("Unable to find project area service provider for '{}'",
-					projectAreaName);
+			logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 			return null;
 		}
 
@@ -192,11 +191,11 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export
-	 * to prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the
+	 * export to prepare writing to CSV.
 	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified by a rule.
+	 * We are only interested in streams and the streams description must
+	 * contain a tag specified by a rule.
 	 * 
 	 * @param configurations
 	 * @param projectArea
@@ -265,13 +264,11 @@ public class ConfigurationMappingUtil {
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
 		if (rmProjectAreaOslcServiceProvider == null) {
-			logger.error("Unable to find project '{}'",
-					projectAreaName);
+			logger.error("Unable to find project '{}'", projectAreaName);
 			return null;
 		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			logger.error("Unable to find project area service provider for '{}'",
-					projectAreaName);
+			logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 			return null;
 		}
 
@@ -320,8 +317,7 @@ public class ConfigurationMappingUtil {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean totalResult = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			logger
-					.info("-----------------------------------------------------------------------------");
+			logger.info("-----------------------------------------------------------------------------");
 			logger.info("Import from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
 					exportImportInformation.getSource(), exportImportInformation.getTarget());
 
@@ -344,13 +340,13 @@ public class ConfigurationMappingUtil {
 				logger.info("Failed to create change set as import target.");
 				continue;
 			}
-			// Import the type system changes from the source stream into the change set
+			// Import the type system changes from the source stream into the
+			// change set
 			operationResult = DngCmTypeSystemImportSession.performTypeImport(client, sourceConfiguration,
 					changeSetConfiguration);
 			if (!operationResult) {
 				totalResult &= operationResult;
-				logger.info("Failed to Import into change set '{}'.",
-						changeSetConfiguration.getAbout().toString());
+				logger.info("Failed to Import into change set '{}'.", changeSetConfiguration.getAbout().toString());
 				continue;
 			}
 			String projectAreaServiceProviderUrl = changeSetConfiguration.getServiceProvider().toString();
@@ -362,8 +358,7 @@ public class ConfigurationMappingUtil {
 				totalResult &= operationResult;
 				logger.info("The delivery has failed or there were no differences to deliver!");
 				Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
-				logger.error(
-						"Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
+				logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
 						changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
 						deleted.toString());
 				continue;
@@ -390,8 +385,7 @@ public class ConfigurationMappingUtil {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean delivery = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			logger
-					.info("-----------------------------------------------------------------------------");
+			logger.info("-----------------------------------------------------------------------------");
 			logger.info("Deliver from '{}' to '{}' ", exportImportInformation.getSource(),
 					exportImportInformation.getTarget());
 

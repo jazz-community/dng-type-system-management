@@ -145,7 +145,8 @@ public class ArchiveConfigurationsCmd extends AbstractCommand {
 				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
 						getCommandName());
 				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
-				InternalConfigurationArchiveApi.archiveWithDescendants(client, "https://elm.example.com:9443/rm/cm/baseline/_fw9i0O30EeuxKaq1K6fr8A");
+				InternalConfigurationArchiveApi.archiveWithDescendants(client,
+						"https://elm.example.com:9443/rm/cm/baseline/_fw9i0O30EeuxKaq1K6fr8A");
 				logger.info("Getting Configurations");
 				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
 						.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);

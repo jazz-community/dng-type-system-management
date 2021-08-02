@@ -18,11 +18,11 @@ import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
 import net.oauth.OAuthException;
 
 /**
- * Internal API implementation to archive configurations 
+ * Internal API implementation to archive configurations
  *
  */
 public class InternalConfigurationArchiveApi {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(InternalConfigurationArchiveApi.class);
 	public static final String localVersioning = "/localVersioning/configurations/archiveWithDescendants";
 
@@ -35,7 +35,6 @@ public class InternalConfigurationArchiveApi {
 		return archiveWithDescendants(client, configuration.getAbout().toString());
 	}
 
-
 	public static boolean archiveWithDescendants(final JazzFormAuthClient client, final String configuration) {
 
 		boolean result = false;
@@ -43,17 +42,19 @@ public class InternalConfigurationArchiveApi {
 			logger.info("Change set must not be null");
 			return result;
 		}
-		//POST https://jazz.ibm.com:9443/rm/localVersioning/configurations/archiveWithDescendants?configurationUri=https%3A%2F%2Fjazz.ibm.com%3A9443%2Frm%2Fcm%2Fbaseline%2F_UdEZMN_9EeuEmPSHUJVGfg HTTP/1.1
+		// POST
+		// https://jazz.ibm.com:9443/rm/localVersioning/configurations/archiveWithDescendants?configurationUri=https%3A%2F%2Fjazz.ibm.com%3A9443%2Frm%2Fcm%2Fbaseline%2F_UdEZMN_9EeuEmPSHUJVGfg
+		// HTTP/1.1
 		String url = client.getUrl();
 		String param = null;
 		try {
-			 param = URLEncoder.encode(configuration, "UTF-8");
+			param = URLEncoder.encode(configuration, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Exception unsupported encoding: " + e.getMessage());
 			return result;
 		}
 		final String finalUrl = url.concat(localVersioning).concat("?").concat("configurationUri=").concat(param);
-		
+
 		logger.debug("archive with descendants");
 		HttpResponse response = null;
 		try {
@@ -91,6 +92,5 @@ public class InternalConfigurationArchiveApi {
 		}
 		return result;
 	}
-
 
 }

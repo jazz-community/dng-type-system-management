@@ -238,9 +238,9 @@ public class DngCmDeliverySession extends AbstractResource {
 			 * 
 			 * A POST request must contain -
 			 * 
-			 * a valid Source Configuration resource uri: this must be of a Baseline, a
-			 * Stream or a ChangeSet. a valid Target Configuration resource uri: this must
-			 * be of a Stream.
+			 * a valid Source Configuration resource uri: this must be of a
+			 * Baseline, a Stream or a ChangeSet. a valid Target Configuration
+			 * resource uri: this must be of a Stream.
 			 * 
 			 * A POST request may contain -
 			 * 
@@ -248,14 +248,16 @@ public class DngCmDeliverySession extends AbstractResource {
 			 * 
 			 * The server may respond with an error code, or, 201 CREATED.
 			 * 
-			 * 201 CREATED: The request was completed. The Location response header contains
-			 * the uri of the newly-created delivery session resource.
+			 * 201 CREATED: The request was completed. The Location response
+			 * header contains the uri of the newly-created delivery session
+			 * resource.
 			 * 
-			 * 409: The source or target configuration was not found in the repository.
+			 * 409: The source or target configuration was not found in the
+			 * repository.
 			 * 
-			 * 400: The request was not completed. This can happen when the request is
-			 * invalid for a reason other than above. The body of the response may include a
-			 * description of any failures.
+			 * 400: The request was not completed. This can happen when the
+			 * request is invalid for a reason other than above. The body of the
+			 * response may include a description of any failures.
 			 * 
 			 * 
 			 * 
@@ -337,20 +339,21 @@ public class DngCmDeliverySession extends AbstractResource {
 			 * 
 			 * The server will respond with an error code, or, 200 OK.
 			 * 
-			 * 200 OK: The request was completed. The representation in the body will
-			 * indicate the state of the session.
+			 * 200 OK: The request was completed. The representation in the body
+			 * will indicate the state of the session.
 			 * 
-			 * 202: The delivery session is being processed. The Location header of the
-			 * response will contain a uri which will report the progress of this
-			 * processing: this uri can be polled every few seconds.
+			 * 202: The delivery session is being processed. The Location header
+			 * of the response will contain a uri which will report the progress
+			 * of this processing: this uri can be polled every few seconds.
 			 * 
 			 * 404: The delivery session was not found in the repository.
 			 * 
 			 * 410: The delivery session has been deleted from the repository.
 			 * 
-			 * 400: The request was not completed. This can happen when the request fails in
-			 * such a way that the session cannot be recovered for reasons other than above.
-			 * The body of the response may include a description of any failures.
+			 * 400: The request was not completed. This can happen when the
+			 * request fails in such a way that the session cannot be recovered
+			 * for reasons other than above. The body of the response may
+			 * include a description of any failures.
 			 * 
 			 */
 			switch (response.getStatusCode()) {
@@ -422,43 +425,46 @@ public class DngCmDeliverySession extends AbstractResource {
 			/**
 			 * 6.2 Behavior of PUT
 			 * 
-			 * A PUT which attempts to make an invalid state transition will respond with
-			 * 409 Conflict.
+			 * A PUT which attempts to make an invalid state transition will
+			 * respond with 409 Conflict.
 			 * 
-			 * Changing the delivery state of a session to dng_config:delivered will cause
-			 * the server to begin processing the delivery of changes from the source to the
-			 * target. This may take some time.
+			 * Changing the delivery state of a session to dng_config:delivered
+			 * will cause the server to begin processing the delivery of changes
+			 * from the source to the target. This may take some time.
 			 *
-			 * If that delivery session is already in the process of being delivered, the
-			 * response to the PUT will be 409 Conflict.
+			 * If that delivery session is already in the process of being
+			 * delivered, the response to the PUT will be 409 Conflict.
 			 * 
-			 * The server may respond with an error code, or, 200 OK, or it may respond with
-			 * a 202 Accepted, indicating that the delivery operation may take some time and
-			 * is being processed in the background.
+			 * The server may respond with an error code, or, 200 OK, or it may
+			 * respond with a 202 Accepted, indicating that the delivery
+			 * operation may take some time and is being processed in the
+			 * background.
 			 *
-			 * In case of 202 response, the server will continue processing the delivery
-			 * asynchronously. Clients can poll the returned resource uri until such times
-			 * as the server responds with a message indicating that the processing is
-			 * complete.
+			 * In case of 202 response, the server will continue processing the
+			 * delivery asynchronously. Clients can poll the returned resource
+			 * uri until such times as the server responds with a message
+			 * indicating that the processing is complete.
 			 * 
-			 * 200 OK: The delivery was completed. The representation in the body will
-			 * indicate the state of the session. In case of a successful delivery, the
-			 * state will be dng_config:delivered; in case of an unsuccessful delivery, it
-			 * will be in some other state.
+			 * 200 OK: The delivery was completed. The representation in the
+			 * body will indicate the state of the session. In case of a
+			 * successful delivery, the state will be dng_config:delivered; in
+			 * case of an unsuccessful delivery, it will be in some other state.
 			 * 
-			 * 202: The delivery session is being processed. The Location header of the
-			 * response will contain a uri which will report the progress of this
-			 * processing: this uri can be polled every few seconds.
+			 * 202: The delivery session is being processed. The Location header
+			 * of the response will contain a uri which will report the progress
+			 * of this processing: this uri can be polled every few seconds.
 			 * 
 			 * 404: The delivery session was not found in the repository.
 			 * 
-			 * 409: The delivery session is already in the process of being delivered.
+			 * 409: The delivery session is already in the process of being
+			 * delivered.
 			 * 
 			 * 410: The delivery session has been deleted from the repository.
 			 * 
-			 * 400: The delivery session is not available. This can happen when the delivery
-			 * fails in such a way that the session cannot be updated. The body of the
-			 * response may include a description of any delivery failures.
+			 * 400: The delivery session is not available. This can happen when
+			 * the delivery fails in such a way that the session cannot be
+			 * updated. The body of the response may include a description of
+			 * any delivery failures.
 			 * 
 			 */
 			switch (response.getStatusCode()) {
@@ -580,7 +586,7 @@ public class DngCmDeliverySession extends AbstractResource {
 		// header.put("Configuration-Context", source.getAbout().toString());
 		header.put(OSLCConstants.OSLC_CORE_VERSION, DngTypeSystemManagementConstants.OSLC_VERSION_2_HEADER_VALUE);
 		header.put(DngTypeSystemManagementConstants.ACCEPT_HEADER, OslcMediaType.APPLICATION_RDF_XML);
-//		header.put("DoorsRP-Request-Type", "public 2.0");
+		// header.put("DoorsRP-Request-Type", "public 2.0");
 
 		LoggingUtil.setLoggingLevel(LoggingUtil.INFO);
 		logger.debug("Delete session: " + sessionURL);
@@ -597,19 +603,22 @@ public class DngCmDeliverySession extends AbstractResource {
 			 * 
 			 * 200 OK: The request was completed.
 			 * 
-			 * 202: The delivery session is already in the process of being delivered. The
-			 * Location header of the response will contain a uri which will report the
-			 * progress of this processing: this uri can be polled every few seconds.
+			 * 202: The delivery session is already in the process of being
+			 * delivered. The Location header of the response will contain a uri
+			 * which will report the progress of this processing: this uri can
+			 * be polled every few seconds.
 			 * 
 			 * 404: The delivery session was not found in the repository.
 			 * 
-			 * 409: The delivery session is already in the process of being delivered.
+			 * 409: The delivery session is already in the process of being
+			 * delivered.
 			 * 
 			 * 410: The delivery session has been deleted from the repository.
 			 * 
-			 * 400: The request was not completed. This can happen when the request fails in
-			 * such a way that the session cannot be deleted. The body of the response may
-			 * include a description of any failures.
+			 * 400: The request was not completed. This can happen when the
+			 * request fails in such a way that the session cannot be deleted.
+			 * The body of the response may include a description of any
+			 * failures.
 			 */
 			switch (response.getStatusCode()) {
 			case 200:

@@ -36,8 +36,10 @@ public interface ICommand {
 	/**
 	 * Method to run the command
 	 * 
-	 * @param options Options to add the specific options for a command
-	 * @param args    the arguments of this call
+	 * @param options
+	 *            Options to add the specific options for a command
+	 * @param args
+	 *            the arguments of this call
 	 * @return true if command was successful, false otherwise.
 	 */
 	public boolean run(Options options, final String[] args);

@@ -41,8 +41,10 @@ public class HeaderRequestInterceptor implements HttpRequestInterceptor {
 	/**
 	 * Constructor
 	 * 
-	 * @param addHeaders    the headers to be added or null
-	 * @param removeHeaders the headers to be removed or null
+	 * @param addHeaders
+	 *            the headers to be added or null
+	 * @param removeHeaders
+	 *            the headers to be removed or null
 	 */
 	private HeaderRequestInterceptor(HashMap<String, String> addHeaders, HashMap<String, String> removeHeaders) {
 		this.addHeaders = addHeaders;
@@ -72,9 +74,12 @@ public class HeaderRequestInterceptor implements HttpRequestInterceptor {
 	 * Install the request Interceptor. This method hides the deprecation of the
 	 * HTTP Client.
 	 * 
-	 * @param client        the OSLC Client
-	 * @param addHeaders    the headers to be added or null
-	 * @param removeHeaders the headers to be removed or null
+	 * @param client
+	 *            the OSLC Client
+	 * @param addHeaders
+	 *            the headers to be added or null
+	 * @param removeHeaders
+	 *            the headers to be removed or null
 	 */
 	public static void installRequestInterceptor(OslcClient client, HashMap<String, String> addHeaders,
 			HashMap<String, String> removeHeaders) {
@@ -87,16 +92,18 @@ public class HeaderRequestInterceptor implements HttpRequestInterceptor {
 	 * Install the request Interceptor. This method hides the deprecation of the
 	 * HTTP Client.
 	 * 
-	 * @param client     the OSLC Client
-	 * @param addHeaders the headers to be added or null
+	 * @param client
+	 *            the OSLC Client
+	 * @param addHeaders
+	 *            the headers to be added or null
 	 */
 	public static void installRequestInterceptor(OslcClient client, HashMap<String, String> addHeaders) {
 		installRequestInterceptor(client, addHeaders, null);
 	}
 
 	/**
-	 * Removes the request interceptor This should be done after each call, in order
-	 * to make sure the interseptor is not active where it should not.
+	 * Removes the request interceptor This should be done after each call, in
+	 * order to make sure the interseptor is not active where it should not.
 	 * 
 	 * @param client
 	 */
@@ -107,8 +114,10 @@ public class HeaderRequestInterceptor implements HttpRequestInterceptor {
 	/**
 	 * Remove the request Interceptor.
 	 * 
-	 * @param client     the OSLC Client
-	 * @param addHeaders the headers to be added or null
+	 * @param client
+	 *            the OSLC Client
+	 * @param addHeaders
+	 *            the headers to be added or null
 	 */
 	public static void clearHeaders(OslcClient client) {
 		installRequestInterceptor(client, null, null);
