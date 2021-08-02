@@ -53,4 +53,13 @@ public class TimeStampUtil {
 		return getDate(new Timestamp((new Date()).getTime()), null);
 	}
 
+	/**
+	 * Get the date as a string
+	 * @param date
+	 * @return 
+	 */
+	public static String getDate(Date date) {
+		return getDate(new Timestamp(date.getTime()), null);
+	}
+
 }

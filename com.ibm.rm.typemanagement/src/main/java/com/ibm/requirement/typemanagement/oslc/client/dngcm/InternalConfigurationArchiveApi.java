@@ -5,8 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.eclipse.lyo.client.oslc.jazz.JazzFormAuthClient;

@@ -21,7 +21,7 @@ package com.ibm.requirement.typemanagement.oslc.client.automation;
  */
 public interface DngTypeSystemManagementConstants {
 
-	public static final String VERSIONINFO = "1.2";
+	public static final String VERSIONINFO = "1.3";
 
 	// Commands and parameters
 	public static final String PARAMETER_COMMAND = "command";
@@ -132,4 +132,10 @@ public interface DngTypeSystemManagementConstants {
 
 	public static final String CMD_ARCHIVE_CONFIGURATIONS = "archiveConfigurations";
 
+	public static final String CMD_ANALYZE_CONFIGURATIONS = "analyzeConfigurations";
+
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT = "processItemsLimit";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_DESCRIPTION = "Limit the maximum amount of items to be processed.";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_PROTOTYPE = "<processItemsLimit>";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_EXAMPLE = "1000";
 }
