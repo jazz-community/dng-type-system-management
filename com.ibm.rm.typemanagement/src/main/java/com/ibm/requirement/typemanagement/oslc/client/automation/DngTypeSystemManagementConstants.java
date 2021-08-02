@@ -65,7 +65,7 @@ public interface DngTypeSystemManagementConstants {
 	public static final String PARAMETER_CSV_DELIMITER = "csvDelimiter";
 	public static final String PARAMETER_CSV_DELIMITER_DESCRIPTION = "The delimiter character to be used in the CSV file.";
 	public static final String PARAMETER_CSV_DELIMITER_EXAMPLE = "\";\"";
-	public static final String PARAMETER_CSV_DELIMITER_PROTOTYPE = "\"character\"";
+	public static final String PARAMETER_CSV_DELIMITER_PROTOTYPE = "\"<Character>\"";
 
 	public static final String PARAMETER_SOURCE_TAG = "sourceTag";
 	public static final String PARAMETER_SOURCE_TAG_DESCRIPTION = "The tag to identify the source configuration";

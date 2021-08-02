@@ -139,7 +139,7 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
 		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
 				DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT_PROTOTYPE);
-		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
+		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
 				DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT_EXAMPLE);
 
 	}
