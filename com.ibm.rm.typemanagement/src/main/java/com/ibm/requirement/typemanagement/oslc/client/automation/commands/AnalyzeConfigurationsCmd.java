@@ -49,8 +49,7 @@ import com.ibm.requirement.typemanagement.oslc.client.resources.Configuration;
 import net.oauth.OAuthException;
 
 /**
- * Exports the streams/configurations of a project area to CSV/Excel.
- *
+ * Exports the streams/configurations of one or all project areas to CSV/Excel.
  */
 public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
@@ -94,7 +93,8 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		if (!(cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_URL)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_USER)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PASSWORD)
-				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA)
+				// &&
+				// cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH))) {
 			isValid = false;
 		}
@@ -105,8 +105,8 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
 		logger.info(
-				"\n\tFinds all editable configurations of a project area and exports the information into a CSV file.");
-		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+				"\n\tFinds all editable configurations of one configuration enabled project area provided by name, or all configuration enabled project areas of an RM application and exports the information into a CSV file.");
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -114,32 +114,34 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_PROTOTYPE,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_PROTOTYPE,
+
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
-		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
-				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
-				DngTypeSystemManagementConstants.PARAMETER_URL, DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE,
-				DngTypeSystemManagementConstants.PARAMETER_USER,
+		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {}", DngTypeSystemManagementConstants.PARAMETER_COMMAND,
+				getCommandName(), DngTypeSystemManagementConstants.PARAMETER_URL,
+				DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE, DngTypeSystemManagementConstants.PARAMETER_USER,
 				DngTypeSystemManagementConstants.PARAMETER_USER_ID_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_EXAMPLE,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_EXAMPLE);
 
-		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
+		logger.info("\n\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_PROTOTYPE);
+		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
+				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_EXAMPLE);
+
+		logger.info("\n\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
 		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
 
-		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
+		logger.info("\n\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
 				DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT_PROTOTYPE);
-		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
+		logger.info("\tExample optional parameter: -{} {}",
+				DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT,
 				DngTypeSystemManagementConstants.PARAMETER_PROCESS_ITEMS_LIMIT_EXAMPLE);
 
 	}
@@ -178,9 +180,12 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 						getCommandName());
 				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				createWriter(csvFilePath);
-				getHeader();
-
-				analyzeConfigurations(client, helper, projectAreaName);
+				writeHeader();
+				if (projectAreaName == null) {
+					analyzeProjectAreas(client, helper);
+				} else {
+					analyzeConfigurations(client, helper, projectAreaName);
+				}
 
 				fWriter.flush();
 				fWriter.close();
@@ -193,6 +198,28 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 			ExpensiveScenarioService.stopScenario(scenarioService, scenarioInstance);
 		}
 		return result;
+	}
+
+	private boolean analyzeProjectAreas(JazzFormAuthClient client, JazzRootServicesHelper helper)
+			throws ResourceNotFoundException, IOException, OAuthException, URISyntaxException {
+		logger.info("Getting Configurations");
+		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
+		if (cmCatalogUrl == null) {
+			logger.error("Unable to access the OSLC Configuration Management Provider URL");
+			return false;
+		}
+		Collection<String> projectAreaComponentFactories = DngCmUtil.getRmCmOslcLDPComponentFactories(client,
+				cmCatalogUrl);
+		for (String factory : projectAreaComponentFactories) {
+			try {
+				Collection<Component> components = DngCmUtil.getComponents(client, factory);
+				analyzeComponents(client, components);
+			} catch (Exception e) {
+				logger.error("Exception analyzing components: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	private Object analyzeConfigurations(JazzFormAuthClient client, JazzRootServicesHelper helper,
@@ -228,8 +255,6 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
 	private boolean analyzeComponents(JazzFormAuthClient client, Collection<Component> components)
 			throws IOException, OAuthException, URISyntaxException {
-		// Collection<Configuration> configurations =
-		// DngCmUtil.getConfigurationsForComponents(client, components);
 		for (Iterator<Component> iterator = components.iterator(); iterator.hasNext();) {
 			Component component = (Component) iterator.next();
 			if (!analyzeComponent(client, component)) {
@@ -261,7 +286,7 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getString(configuration.getIdentifier()));
 		sb.append(fDelimiter);
-		sb.append("\""+getConfigurationType(configuration)+"\"");
+		sb.append("\"" + getConfigurationType(configuration) + "\"");
 		sb.append(fDelimiter);
 		sb.append(getString(configuration.getAbout()));
 		sb.append(fDelimiter);
@@ -291,7 +316,7 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		fWriter.write(sb.toString());
 	}
 
-	private String getHeader() {
+	private String writeHeader() {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -343,7 +368,7 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
 	private String getString(String value) {
 		if (value != null) {
-			return "\""+removeDelimiter(value)+"\"";
+			return "\"" + removeDelimiter(value) + "\"";
 		}
 		return "\"\"";
 	}
@@ -356,15 +381,18 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		return value;
 	}
 
+	@SuppressWarnings("unused")
 	private void analyzeConfiguration(JazzFormAuthClient client, Configuration configuration)
 			throws IOException, OAuthException, URISyntaxException {
 		configuration.getAbout();
 	}
 
+	@SuppressWarnings("unused")
 	private String configurationAsString(Configuration configuration) {
 		return configurationAsString(configuration, null);
 	}
 
+	@SuppressWarnings("unused")
 	private String configurationAsString(Configuration configuration, String prefix) {
 		if (prefix == null) {
 			prefix = "";
@@ -382,16 +410,16 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		String confType = getConfigurationType(configuration);
 
 		String confMessage = prefix + " " + confIdentifier + "\t" + confType + " '" + confTitle + "'"; // "'
-																								// '"
-																								// +
-																								// confDescription
-																								// +
-																								// "'
-																								// "
-																								// +
-																								// confURI
-																								// +
-																								// "";
+		// '"
+		// +
+		// confDescription
+		// +
+		// "'
+		// "
+		// +
+		// confURI
+		// +
+		// "";
 		return confMessage;
 	}
 
@@ -407,10 +435,12 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		return confType;
 	}
 
+	@SuppressWarnings("unused")
 	private String componentAsString(Component component) {
 		return componentAsString(component, null);
 	}
 
+	@SuppressWarnings("unused")
 	private String componentAsString(Component component, String prefix) {
 		if (prefix == null) {
 			prefix = "";

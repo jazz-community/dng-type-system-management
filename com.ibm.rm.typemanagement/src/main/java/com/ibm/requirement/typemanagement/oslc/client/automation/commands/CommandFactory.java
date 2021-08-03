@@ -36,6 +36,7 @@ public class CommandFactory {
 	/**
 	 * Creates the list of supported commands
 	 */
+	@SuppressWarnings("deprecation")
 	private CommandFactory() {
 		super();
 		put(new ExportConfigurationsCmd());

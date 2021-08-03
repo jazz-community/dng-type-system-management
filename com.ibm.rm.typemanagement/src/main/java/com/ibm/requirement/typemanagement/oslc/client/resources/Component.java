@@ -43,6 +43,7 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 public class Component extends AbstractResource {
 
 	private String title;
+	@SuppressWarnings("unused")
 	private String identifier;
 	private String description;
 	private URI serviceProvider;

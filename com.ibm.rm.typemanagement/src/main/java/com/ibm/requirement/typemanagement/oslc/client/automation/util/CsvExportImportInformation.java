@@ -66,6 +66,7 @@ public class CsvExportImportInformation {
 		super();
 	}
 
+	@SuppressWarnings("deprecation")
 	public CsvExportImportInformation(final Configuration source, final Configuration target,
 			final String projectAreaName) throws URISyntaxException {
 		super();

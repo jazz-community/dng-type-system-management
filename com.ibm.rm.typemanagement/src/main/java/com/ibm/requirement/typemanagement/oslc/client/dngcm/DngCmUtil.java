@@ -398,6 +398,7 @@ public class DngCmUtil {
 	 * @throws OAuthException
 	 * @throws URISyntaxException
 	 */
+	@SuppressWarnings("deprecation")
 	public static Collection<Configuration> getComponentConfigurations(final JazzFormAuthClient client,
 			final Component component) throws IOException, OAuthException, URISyntaxException {
 		Collection<Configuration> foundConfigurations = new ArrayList<Configuration>();

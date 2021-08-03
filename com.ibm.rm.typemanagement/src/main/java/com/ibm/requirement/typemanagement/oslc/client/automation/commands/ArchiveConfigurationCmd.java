@@ -15,8 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation.commands;
 
-import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.http.HttpStatus;
@@ -30,15 +28,13 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.InternalConfigurationArchiveApi;
 
 /**
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
+@SuppressWarnings("deprecation")
 public class ArchiveConfigurationCmd extends AbstractCommand {
 
 	public static final Logger logger = LoggerFactory.getLogger(ArchiveConfigurationCmd.class);
@@ -125,6 +121,7 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
 	}
 
+
 	@Override
 	public boolean execute() {
 		boolean result = false;
@@ -134,9 +131,6 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
 		String passwd = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PASSWORD);
 		String configurationURI = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI);
-//		String projectAreaName = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA);
-//		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
-//		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
 
 		JazzFormAuthClient client = null;
 		IExpensiveScenarioService scenarioService = null;

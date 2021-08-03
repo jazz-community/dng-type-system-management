@@ -52,6 +52,7 @@ public class Configuration extends AbstractResource {
 	private URI projectArea;
 	private URI baselines;
 	private String identifier;
+	@SuppressWarnings("unused")
 	private URI itemType;
 	private URI previousBaseline;
 	private URI accessContext;
