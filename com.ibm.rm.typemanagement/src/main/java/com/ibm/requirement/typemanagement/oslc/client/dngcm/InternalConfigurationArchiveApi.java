@@ -19,6 +19,10 @@ import net.oauth.OAuthException;
 
 /**
  * Internal API implementation to archive configurations
+ * Usage of this API voids support.
+ *  
+ * @deprecated
+ * 
  *
  */
 public class InternalConfigurationArchiveApi {
@@ -26,6 +30,14 @@ public class InternalConfigurationArchiveApi {
 	public static final Logger logger = LoggerFactory.getLogger(InternalConfigurationArchiveApi.class);
 	public static final String localVersioning = "/localVersioning/configurations/archiveWithDescendants";
 
+	/**
+	 * @param client
+	 * @param configuration
+	 * @return
+	 * @throws IOException
+	 * @throws OAuthException
+	 * @throws URISyntaxException
+	 */
 	public static boolean archiveWithDescendants(final JazzFormAuthClient client, final Configuration configuration)
 			throws IOException, OAuthException, URISyntaxException {
 		if (configuration == null) {
@@ -35,6 +47,11 @@ public class InternalConfigurationArchiveApi {
 		return archiveWithDescendants(client, configuration.getAbout().toString());
 	}
 
+	/**
+	 * @param client
+	 * @param configuration
+	 * @return
+	 */
 	public static boolean archiveWithDescendants(final JazzFormAuthClient client, final String configuration) {
 
 		boolean result = false;

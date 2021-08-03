@@ -138,4 +138,8 @@ public interface DngTypeSystemManagementConstants {
 	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_DESCRIPTION = "Limit the maximum amount of items to be processed.";
 	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_PROTOTYPE = "<processItemsLimit>";
 	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_EXAMPLE = "1000";
+
+	public static final String PARAMETER_CONFIGURATION_URI = "configurationURI";
+
+	public static final String PARAMETER_CONFIGURATION_URI_DESCRIPTION = "The URI for a configuration.";
 }
