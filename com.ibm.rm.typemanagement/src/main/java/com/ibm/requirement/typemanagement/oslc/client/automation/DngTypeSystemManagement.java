@@ -15,8 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation;
 
-import java.net.URISyntaxException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -44,15 +42,18 @@ public class DngTypeSystemManagement {
 	 * Main entry point for the application. Gets and performs the command.
 	 * 
 	 * @param args
-	 * @throws ParseException
-	 * @throws URISyntaxException
 	 */
-	public static void main(String[] args) throws URISyntaxException, ParseException {
+	public static void main(String[] args) {
 
 		logger.info("\nTypeSystemManager Version: {}", DngTypeSystemManagementConstants.VERSIONINFO);
 		DngTypeSystemManagement tsm = new DngTypeSystemManagement();
 
-		boolean result = tsm.execute(args);
+		boolean result = false;
+		try {
+			result = tsm.execute(args);
+		} catch (ParseException e) {
+			logger.error("Parse Exception " + e.getMessage());
+		}
 		if (result) {
 			logger.info("Success.");
 		} else {

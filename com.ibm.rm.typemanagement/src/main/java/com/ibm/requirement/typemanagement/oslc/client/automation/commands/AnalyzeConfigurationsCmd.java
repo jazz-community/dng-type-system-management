@@ -59,6 +59,8 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 	private int maxcount = -1;
 	private PrintWriter fWriter = null;
 	private String fDelimiter = ";";
+	private String fQuote = "\"";
+	private String fEmptyString = "\"\"";
 
 	/**
 	 * Create new command and give it the name
@@ -286,7 +288,7 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getString(configuration.getIdentifier()));
 		sb.append(fDelimiter);
-		sb.append("\"" + getConfigurationType(configuration) + "\"");
+		sb.append(getString(getConfigurationType(configuration)));
 		sb.append(fDelimiter);
 		sb.append(getString(configuration.getAbout()));
 		sb.append(fDelimiter);
@@ -354,29 +356,38 @@ public class AnalyzeConfigurationsCmd extends AbstractCommand {
 
 	private String getString(Date date) {
 		if (date == null) {
-			return "\"\"";
+			return fEmptyString;
 		}
 		return getString(TimeStampUtil.getDate(date));
 	}
 
 	private String getString(URI uri) {
 		if (uri == null) {
-			return "\"\"";
+			return fEmptyString;
 		}
 		return getString(uri.toString());
 	}
 
 	private String getString(String value) {
 		if (value != null) {
-			return "\"" + removeDelimiter(value) + "\"";
+			String cleaned = replaceCharacter(value,fQuote, "'");
+			//cleaned = replaceCharacter(value,fDelimiter, "-");
+			return fQuote + cleaned + fQuote;
 		}
-		return "\"\"";
+		return fEmptyString;
 	}
 
-	private String removeDelimiter(String value) {
-		if (value.contains(fDelimiter)) {
-			logger.info("Delimiter detected in \'" + value + "'");
-			return value.replace(fDelimiter, "-");
+	/**
+	 * Replace a character that causes the 
+	 * @param value
+	 * @param remove
+	 * @param replace
+	 * @return
+	 */
+	private String replaceCharacter(String value, String remove, String replace) {
+		if (value.contains(remove)) {
+			logger.info("Character " + remove + " detected in '" + value + "'");
+			return value.replace(remove, replace);
 		}
 		return value;
 	}
