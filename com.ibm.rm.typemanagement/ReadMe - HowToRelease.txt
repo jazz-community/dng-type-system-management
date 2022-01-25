@@ -25,9 +25,26 @@ Click Finish and allow to create the folder.
 The application is now usable. 
 
 To ship it 
+
 1. Select the folder 'C:\temp\TSM\' and compress the file
 2. Rename the archive file to tsm-Vx-YYYYMMDD.zip, 
    where x is the version, YYYY is the year, MM is the month and DD is the day
 3. The file is now ready for shipping. It can basically just be uncompressed 
    on a different machine in some folder and used from there.
   
+To use it
+Unzip the File tsm-Vx-YYYYMMDD.zip e.g. to a folder TSM.
+
+The Folder now contains files
+ - tsm.bat
+ - tsm.sh
+ - tsm.lib
+ - a folder tsm_lib with some libraries.
+
+TSM requires a JAVA_HOME set. The JAVA_HOME can be set in the environment, in tsm.bat tsm.sh.  
+
+Run tsm.bat or tsm.sh without a command to get a description printed. This will also reveal if there are any issues with Java.
+
+Any run is appended to log4j/log.out 
+The log file can be deleted and gets recreated.
+
