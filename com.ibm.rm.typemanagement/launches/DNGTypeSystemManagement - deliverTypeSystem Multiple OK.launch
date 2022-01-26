@@ -11,7 +11,7 @@
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagement"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command deliverTypeSystem -url https://clm.example.com:9443/rm -user ralph -password ralph -csvfile &quot;c:\Temp\TypeSystemMassDelivery.csv&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command deliverTypeSystem -url https://elm.example.com:9443/rm -user ralph -password ralph -csvfile &quot;c:\Temp\TypeSystemMassDelivery.csv&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.rm.typemanagement"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

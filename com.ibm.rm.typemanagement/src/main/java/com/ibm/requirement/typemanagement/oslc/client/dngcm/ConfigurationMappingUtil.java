@@ -393,7 +393,7 @@ public class ConfigurationMappingUtil {
 			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getSource());
 			Configuration targetConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getTarget());
 			String projectAreaServiceProviderUrl = targetConfiguration.getServiceProvider().toString();
-
+			Changeset changeSet = new Changeset(client, targetConfiguration);
 			// Deliver
 			Boolean deliverresult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
 					sourceConfiguration, targetConfiguration);
