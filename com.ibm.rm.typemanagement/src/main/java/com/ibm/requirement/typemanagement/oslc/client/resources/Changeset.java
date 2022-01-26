@@ -150,11 +150,16 @@ public class Changeset extends AbstractResource {
 	/**
 	 * Initialize this object with the required information.
 	 * 
-	 * @param title            A title
-	 * @param description      A Description
-	 * @param component        The component for this stream
-	 * @param targetStream     The target Stream for this change set
-	 * @param changesetFactory The change set creation factory
+	 * @param title
+	 *            A title
+	 * @param description
+	 *            A Description
+	 * @param component
+	 *            The component for this stream
+	 * @param targetStream
+	 *            The target Stream for this change set
+	 * @param changesetFactory
+	 *            The change set creation factory
 	 * @throws URISyntaxException
 	 */
 	private void initialize(String title, String description, URI component, URI targetStream, URI changesetFactory)
@@ -238,8 +243,8 @@ public class Changeset extends AbstractResource {
 	 * @param title
 	 * @param description
 	 * @param target
-	 * @return The URI of the newly created change set or null if the change set was
-	 *         not created
+	 * @return The URI of the newly created change set or null if the change set
+	 *         was not created
 	 * @throws IOException
 	 * @throws OAuthException
 	 * @throws URISyntaxException
@@ -253,8 +258,8 @@ public class Changeset extends AbstractResource {
 
 	/**
 	 * @param client
-	 * @return The URI of the newly created change set or null if the change set was
-	 *         not created
+	 * @return The URI of the newly created change set or null if the change set
+	 *         was not created
 	 * @throws IOException
 	 * @throws OAuthException
 	 * @throws URISyntaxException
@@ -262,8 +267,8 @@ public class Changeset extends AbstractResource {
 	private URI create(final JazzFormAuthClient client) throws IOException, OAuthException, URISyntaxException {
 
 		/**
-		 * Three steps Create the change set Get the tracker track the result get the
-		 * change set URI
+		 * Three steps Create the change set Get the tracker track the result
+		 * get the change set URI
 		 */
 
 		URI result = null;
@@ -325,8 +330,8 @@ public class Changeset extends AbstractResource {
 			 * A POST request must contain -
 			 * 
 			 * 
-			 * 201 ACCEPTED: The request was completed. The Location response header
-			 * contains the URI of the newly-created change set.
+			 * 201 ACCEPTED: The request was completed. The Location response
+			 * header contains the URI of the newly-created change set.
 			 * 
 			 */
 			switch (response.getStatusCode()) {
@@ -353,8 +358,8 @@ public class Changeset extends AbstractResource {
 	 * 
 	 * @param client
 	 * @param trackerURI
-	 * @return the URI of the changeSet that was created or null, if the creation
-	 *         failed
+	 * @return the URI of the changeSet that was created or null, if the
+	 *         creation failed
 	 * @throws URISyntaxException
 	 */
 	private URI trackCreation(final JazzFormAuthClient client, final String trackerURI) throws URISyntaxException {

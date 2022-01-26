@@ -36,7 +36,8 @@ public class LoggingUtil {
 	/**
 	 * Can be used to change the logging level dynamically.
 	 * 
-	 * @param level the level that should be used.
+	 * @param level
+	 *            the level that should be used.
 	 */
 	public static void setLoggingLevel(final String level) {
 		Logger logger4j = Logger.getRootLogger();

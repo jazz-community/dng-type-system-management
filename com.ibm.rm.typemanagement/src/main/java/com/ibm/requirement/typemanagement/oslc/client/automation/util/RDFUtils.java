@@ -73,7 +73,8 @@ public class RDFUtils {
 	 * Get the RDF statements from a response
 	 * 
 	 * @param response
-	 * @param message  A message to be printed before the result
+	 * @param message
+	 *            A message to be printed before the result
 	 * @return
 	 * @throws IOException
 	 * @throws OAuthException
@@ -118,7 +119,8 @@ public class RDFUtils {
 	}
 
 	/**
-	 * Gets the RDF representation as XML as string with a message in front of it.
+	 * Gets the RDF representation as XML as string with a message in front of
+	 * it.
 	 * 
 	 * @param response
 	 * @param message
@@ -239,7 +241,8 @@ public class RDFUtils {
 	 * Gets the statements for a property and returns the first found result as
 	 * string.
 	 * 
-	 * example response, "http://jazz.net/ns/rm/dng/config#", "deliverySessionState"
+	 * example response, "http://jazz.net/ns/rm/dng/config#",
+	 * "deliverySessionState"
 	 * 
 	 * 
 	 * @param response

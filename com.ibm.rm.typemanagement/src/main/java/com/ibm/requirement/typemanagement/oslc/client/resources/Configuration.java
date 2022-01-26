@@ -52,6 +52,8 @@ public class Configuration extends AbstractResource {
 	private URI projectArea;
 	private URI baselines;
 	private String identifier;
+	@SuppressWarnings("unused")
+	private URI itemType;
 	private URI previousBaseline;
 	private URI accessContext;
 	private URI creator;
@@ -62,11 +64,29 @@ public class Configuration extends AbstractResource {
 	private Date created;
 	private URI changesets;
 	private URI overrides;
+	private URI baselineOfStream;
+	private URI streams;
+	private URI wasDerivedFrom;
+	/**
+	 * <oslc_config:baselineOfStream rdf:resource=
+	 * "https://elm.example.com:9443/rm/cm/stream/__xnL8O3gEeuiQ9NS4IrdCw"/>
+	 * <oslc_config:streams rdf:resource=
+	 * "https://elm.example.com:9443/rm/cm/baseline/_33TfcO3uEeuxKaq1K6fr8A/streams"/>
+	 * <rdf:type rdf:resource="http://open-services.net/ns/config#Baseline"/>
+	 * <prov:wasDerivedFrom rdf:resource=
+	 * "https://elm.example.com:9443/rm/cm/stream/__xnL8O3gEeuiQ9NS4IrdCw"/>
+	 * 
+	 * 
+	 * 
+	 */
 
-	// Artificial
+	/**
+	 * Artificial
+	 * 
+	 * @deprecated
+	 */
 	private String componentName = "Name not set";
 
-	// TODO: Can we get the component name?
 	public Configuration() {
 		super();
 	}
@@ -131,6 +151,16 @@ public class Configuration extends AbstractResource {
 		this.changesets = changesets;
 	}
 
+	/**
+	 * TODO: xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 * <rdf:type rdf:resource="http://open-services.net/ns/config#Stream"/>
+	 *
+	 * 
+	 */
+	// public void setType(URI type) {
+	// this.type = type;
+	// }
+
 	public boolean isBaseline() {
 		if (isBaseline == null) {
 			computeType(this.getAbout());
@@ -179,10 +209,20 @@ public class Configuration extends AbstractResource {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 * 
+	 * @param componentName
+	 */
 	public void setComponentName(String componentName) {
 		this.componentName = componentName;
 	}
 
+	/**
+	 * @deprecated
+	 * 
+	 * @return
+	 */
 	public String getComponentName() {
 		return this.componentName;
 	}
@@ -193,6 +233,18 @@ public class Configuration extends AbstractResource {
 
 	public void setOverrides(URI overrides) {
 		this.overrides = overrides;
+	}
+
+	public void setBaselineOfStream(URI baselineOfStream) {
+		this.baselineOfStream = baselineOfStream;
+	}
+
+	public void setStreams(URI streams) {
+		this.streams = streams;
+	}
+
+	public void setWasDerivedFrom(URI wasDerivedFrom) {
+		this.wasDerivedFrom = wasDerivedFrom;
 	}
 
 	@OslcDescription("The configuration that this configuration overrides.")
@@ -335,6 +387,51 @@ public class Configuration extends AbstractResource {
 	@OslcTitle("Change Set Factory")
 	public URI getChangesets() {
 		return changesets;
+	}
+
+	/**
+	 * TODO: xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 * <rdf:type rdf:resource="http://open-services.net/ns/config#Stream"/>
+	 *
+	 * @return
+	 */
+
+	// @OslcDescription("The Item Type.")
+	//// @OslcPropertyDefinition( OslcConstants.RDF_NAMESPACE + "type")
+	// @OslcPropertyDefinition(
+	// "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+	// @OslcReadOnly
+	// @OslcOccurs(Occurs.ExactlyOne)
+	// @OslcTitle("ItemType")
+	// public URI getItemType() {
+	// return itemType;
+	// }
+
+	@OslcDescription("The stream we baseline.")
+	@OslcPropertyDefinition("http://open-services.net/ns/config#" + "baselineOfStream")
+	@OslcReadOnly
+	@OslcOccurs(Occurs.ExactlyOne)
+	@OslcTitle("Baseline of this stream")
+	public URI getBaselineOfStream() {
+		return baselineOfStream;
+	}
+
+	@OslcDescription("The streams.")
+	@OslcPropertyDefinition(DngTypeSystemManagementConstants.DMG_CONFIGURATION_MANAGEMENT_NAMESPACE + "streams")
+	@OslcReadOnly
+	@OslcOccurs(Occurs.ExactlyOne)
+	@OslcTitle("Streams")
+	public URI getStreams() {
+		return streams;
+	}
+
+	@OslcDescription("Was derived from.")
+	@OslcPropertyDefinition("http://www.w3.org/ns/prov#" + "wasDerivedFrom")
+	@OslcReadOnly
+	@OslcOccurs(Occurs.ExactlyOne)
+	@OslcTitle("Was derived from.")
+	public URI getWasDerivedFrom() {
+		return wasDerivedFrom;
 	}
 
 }

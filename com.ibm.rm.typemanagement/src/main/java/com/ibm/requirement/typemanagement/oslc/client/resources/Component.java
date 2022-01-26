@@ -43,6 +43,9 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 public class Component extends AbstractResource {
 
 	private String title;
+	@SuppressWarnings("unused")
+	private String identifier;
+	private String description;
 	private URI serviceProvider;
 	private URI configurations;
 	private URI projectArea;
@@ -75,6 +78,14 @@ public class Component extends AbstractResource {
 	public void setAccessContext(URI accessContext) {
 		this.accessContext = accessContext;
 	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	// public void setIdentifier(String identifier) {
+	// this.identifier = identifier;
+	// }
 
 	@OslcDescription("A name for the component.")
 	@OslcTitle("Title")
@@ -120,4 +131,24 @@ public class Component extends AbstractResource {
 	public URI getAccessContext() {
 		return accessContext;
 	}
+
+	@OslcDescription("A description.")
+	@OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "description")
+	@OslcReadOnly
+	@OslcOccurs(Occurs.ZeroOrOne)
+	@OslcTitle("Description")
+	@OslcValueType(ValueType.XMLLiteral)
+	public String getDescription() {
+		return description;
+	}
+
+	// @OslcDescription("An unique identifyer for the object.")
+	// @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier")
+	// @OslcReadOnly
+	// @OslcOccurs(Occurs.ExactlyOne)
+	// @OslcTitle("Identifier")
+	// @OslcValueType(ValueType.XMLLiteral)
+	// public String getIdentifier() {
+	// return identifier;
+	// }
 }

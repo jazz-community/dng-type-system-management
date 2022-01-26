@@ -57,12 +57,13 @@ public class DngCmUtil {
 	public static final Logger logger = LoggerFactory.getLogger(DngCmUtil.class);
 
 	/**
-	 * Gets the RM CM Configuration Service Provider from the rootservices document.
-	 * E.g. URI looks like https://clm.example.com:9443/rm/oslc_config
+	 * Gets the RM CM Configuration Service Provider from the rootservices
+	 * document. E.g. URI looks like https://clm.example.com:9443/rm/oslc_config
 	 * 
-	 * @param helper the JazzRootservicesHelper
-	 * @return the URL of the RM CM Configuration Management service provider URL or
-	 *         null;
+	 * @param helper
+	 *            the JazzRootservicesHelper
+	 * @return the URL of the RM CM Configuration Management service provider
+	 *         URL or null;
 	 * @throws ResourceNotFoundException
 	 */
 	public static String getCmServiceProvider(final JazzRootServicesHelper helper) {
@@ -74,11 +75,14 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Gets the service provider catalog for the RM CM Configuration service E.g.
-	 * URI of the element looks like https://clm.example.com:9443/rm/oslc_config
+	 * Gets the service provider catalog for the RM CM Configuration service
+	 * E.g. URI of the element looks like
+	 * https://clm.example.com:9443/rm/oslc_config
 	 * 
-	 * @param client     The JazzFormAuthClient to be used.
-	 * @param catalogUrl The RM CM Configuration management service provider URL.
+	 * @param client
+	 *            The JazzFormAuthClient to be used.
+	 * @param catalogUrl
+	 *            The RM CM Configuration management service provider URL.
 	 * @return
 	 * @throws IOException
 	 * @throws OAuthException
@@ -109,7 +113,8 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Finds the project area configuration management component creation factories.
+	 * Finds the project area configuration management component creation
+	 * factories.
 	 * 
 	 * @see https://clm.example.com:9443/rm/cm/component/ldpc?project=_5i4eMKYbEei-7e3SSZvGSg
 	 * 
@@ -215,14 +220,15 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Gets the RM Configuration Management Query URL to query for configurations in
-	 * a project area.
+	 * Gets the RM Configuration Management Query URL to query for
+	 * configurations in a project area.
 	 * 
-	 * @param client                        A JazzFormAuthClient
-	 * @param cmCatalogUrl                  The RM CM Configuration management
-	 *                                      service provider URL.
-	 * @param projectAreaServiceProviderUrl The service provider URL for the project
-	 *                                      area.
+	 * @param client
+	 *            A JazzFormAuthClient
+	 * @param cmCatalogUrl
+	 *            The RM CM Configuration management service provider URL.
+	 * @param projectAreaServiceProviderUrl
+	 *            The service provider URL for the project area.
 	 * @return
 	 * @throws IOException
 	 * @throws OAuthException
@@ -239,14 +245,15 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Gets the RM Configuration Management Query URL to query for configurations in
-	 * a project area.
+	 * Gets the RM Configuration Management Query URL to query for
+	 * configurations in a project area.
 	 * 
-	 * @param client                        A JazzFormAuthClient
-	 * @param cmCatalogUrl                  The RM CM Configuration management
-	 *                                      service provider URL.
-	 * @param projectAreaServiceProviderUrl The service provider URL for the project
-	 *                                      area.
+	 * @param client
+	 *            A JazzFormAuthClient
+	 * @param cmCatalogUrl
+	 *            The RM CM Configuration management service provider URL.
+	 * @param projectAreaServiceProviderUrl
+	 *            The service provider URL for the project area.
 	 * @return
 	 * @throws IOException
 	 * @throws OAuthException
@@ -263,14 +270,15 @@ public class DngCmUtil {
 	}
 
 	/**
-	 * Gets the RM Configuration Management Query URL to query for configurations in
-	 * a project area.
+	 * Gets the RM Configuration Management Query URL to query for
+	 * configurations in a project area.
 	 * 
-	 * @param client                        A JazzFormAuthClient
-	 * @param cmCatalogUrl                  The RM CM Configuration management
-	 *                                      service provider URL.
-	 * @param projectAreaServiceProviderUrl The service provider URL for the project
-	 *                                      area.
+	 * @param client
+	 *            A JazzFormAuthClient
+	 * @param cmCatalogUrl
+	 *            The RM CM Configuration management service provider URL.
+	 * @param projectAreaServiceProviderUrl
+	 *            The service provider URL for the project area.
 	 * @return
 	 * @throws IOException
 	 * @throws OAuthException
@@ -289,8 +297,8 @@ public class DngCmUtil {
 	/**
 	 * 
 	 * Query the CM service provider of the project area for components TODO:
-	 * explore and implement the real query mechanism e.g. to only query streams if
-	 * possible
+	 * explore and implement the real query mechanism e.g. to only query streams
+	 * if possible
 	 * 
 	 * @see https://clm.example.com:9443/rm/cm/component/ldpc?project=_5i4eMKYbEei-7e3SSZvGSg
 	 * 
@@ -362,7 +370,8 @@ public class DngCmUtil {
 		try {
 			response = client.getResource(componentURI, OslcMediaType.RDF_XML);
 			logger.debug("Status: " + response.getStatusCode());
-			// logger.info("Component:\n {}", RDFUtils.getRDFRepresentation(response));
+			// logger.info("Component:\n {}",
+			// RDFUtils.getRDFRepresentation(response));
 			switch (response.getStatusCode()) {
 			case 200:
 				foundComp = response.getEntity(Component.class);
@@ -389,6 +398,7 @@ public class DngCmUtil {
 	 * @throws OAuthException
 	 * @throws URISyntaxException
 	 */
+	@SuppressWarnings("deprecation")
 	public static Collection<Configuration> getComponentConfigurations(final JazzFormAuthClient client,
 			final Component component) throws IOException, OAuthException, URISyntaxException {
 		Collection<Configuration> foundConfigurations = new ArrayList<Configuration>();

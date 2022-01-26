@@ -21,7 +21,7 @@ package com.ibm.requirement.typemanagement.oslc.client.automation;
  */
 public interface DngTypeSystemManagementConstants {
 
-	public static final String VERSIONINFO = "1.2";
+	public static final String VERSIONINFO = "1.3";
 
 	// Commands and parameters
 	public static final String PARAMETER_COMMAND = "command";
@@ -65,7 +65,7 @@ public interface DngTypeSystemManagementConstants {
 	public static final String PARAMETER_CSV_DELIMITER = "csvDelimiter";
 	public static final String PARAMETER_CSV_DELIMITER_DESCRIPTION = "The delimiter character to be used in the CSV file.";
 	public static final String PARAMETER_CSV_DELIMITER_EXAMPLE = "\";\"";
-	public static final String PARAMETER_CSV_DELIMITER_PROTOTYPE = "\"character\"";
+	public static final String PARAMETER_CSV_DELIMITER_PROTOTYPE = "\"<Character>\"";
 
 	public static final String PARAMETER_SOURCE_TAG = "sourceTag";
 	public static final String PARAMETER_SOURCE_TAG_DESCRIPTION = "The tag to identify the source configuration";
@@ -130,4 +130,16 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CM_SERVICE_PROVIDER_PROPERTY_NAME = "cmServiceProviders";
 	public static final String PROCESS_NAMESPACE_PROPERTY_PROJECT_AREA = "projectArea";
 
+	public static final String CMD_ARCHIVE_CONFIGURATIONS = "archiveConfigurations";
+
+	public static final String CMD_ANALYZE_CONFIGURATIONS = "analyzeConfigurations";
+
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT = "processItemsLimit";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_DESCRIPTION = "Limit the maximum amount of items to be processed.";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_PROTOTYPE = "<processItemsLimit>";
+	public static final String PARAMETER_PROCESS_ITEMS_LIMIT_EXAMPLE = "1000";
+
+	public static final String PARAMETER_CONFIGURATION_URI = "configurationURI";
+
+	public static final String PARAMETER_CONFIGURATION_URI_DESCRIPTION = "The URI for a configuration.";
 }

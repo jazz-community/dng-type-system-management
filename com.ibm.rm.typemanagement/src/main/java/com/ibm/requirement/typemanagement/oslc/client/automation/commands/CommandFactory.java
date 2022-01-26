@@ -36,6 +36,7 @@ public class CommandFactory {
 	/**
 	 * Creates the list of supported commands
 	 */
+	@SuppressWarnings("deprecation")
 	private CommandFactory() {
 		super();
 		put(new ExportConfigurationsCmd());
@@ -45,6 +46,8 @@ public class CommandFactory {
 		put(new DeliverTypeSystemCmd());
 		put(new ImportTypeSystemByDescriptionCmd());
 		put(new DeliverTypeSystemByDescriptionCmd());
+		put(new ArchiveConfigurationCmd());
+		put(new AnalyzeConfigurationsCmd());
 		// Enable sample command
 		// put(new SampleCommandCmd());
 	}

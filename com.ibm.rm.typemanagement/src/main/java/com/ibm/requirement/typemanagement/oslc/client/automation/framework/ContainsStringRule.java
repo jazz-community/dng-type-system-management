@@ -31,9 +31,8 @@ public class ContainsStringRule implements IRule {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.requirement.typemanagement.oslc.client.automation.framework.IRule#
-	 * matches(java.lang.Object)
+	 * @see com.ibm.requirement.typemanagement.oslc.client.automation.framework.
+	 * IRule# matches(java.lang.Object)
 	 */
 	@Override
 	public boolean matches(final Object value) {

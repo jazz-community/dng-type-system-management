@@ -27,10 +27,6 @@ import org.eclipse.lyo.client.oslc.jazz.JazzRootServicesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.requirement.typemanagement.oslc.client.automation.commands.DeliverTypeSystemCmd;
-import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ExportConfigurationsByDescriptionCmd;
-import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ExportConfigurationsCmd;
-import com.ibm.requirement.typemanagement.oslc.client.automation.commands.ImportTypeSystemCmd;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.ContainsStringRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.IRule;
 import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
@@ -47,8 +43,8 @@ public class ConfigurationMappingUtil {
 	public static final Logger logger = LoggerFactory.getLogger(ConfigurationMappingUtil.class);
 
 	/**
-	 * Get the source to target mapping for editable configurations for al project
-	 * areas based on source and target description tag.
+	 * Get the source to target mapping for editable configurations for al
+	 * project areas based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -88,11 +84,11 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export
-	 * to prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the
+	 * export to prepare writing to CSV.
 	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified by a rule.
+	 * We are only interested in streams and the streams description must
+	 * contain a tag specified by a rule.
 	 * 
 	 * @param configurations
 	 * @param projectArea
@@ -135,8 +131,8 @@ public class ConfigurationMappingUtil {
 	}
 
 	/**
-	 * Get the source to target mapping for editable configurations for a project
-	 * area based on source and target description tag.
+	 * Get the source to target mapping for editable configurations for a
+	 * project area based on source and target description tag.
 	 * 
 	 * @param client
 	 * @param helper
@@ -154,23 +150,26 @@ public class ConfigurationMappingUtil {
 			String targetTag) throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
 		// Get rootservices
 		String catalogUrl = helper.getCatalogUrl();
-		ExportConfigurationsByDescriptionCmd.logger.info("Getting Configurations");
+		logger.info("Getting Configurations");
 
 		// Get the OSLC CM Service Provider
 		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 		if (cmCatalogUrl == null) {
-			ExportConfigurationsByDescriptionCmd.logger
-					.error("Unable to access the OSLC Configuration Management Provider URL");
+			logger.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
 
-		// Find the OSLC service provider for the project area - assuming the project
+		// Find the OSLC service provider for the project area - assuming the
+		// project
 		// area is CM enabled
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
+		if (rmProjectAreaOslcServiceProvider == null) {
+			logger.error("Unable to find project area '{}'");
+			return null;
+		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			ExportConfigurationsByDescriptionCmd.logger.error("Unable to find project area service provider for '{}'",
-					projectAreaName);
+			logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 			return null;
 		}
 
@@ -179,24 +178,24 @@ public class ConfigurationMappingUtil {
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
 
-		ExportConfigurationsByDescriptionCmd.logger.info("Filtering for Configurations");
+		logger.info("Filtering for Configurations");
 		IRule sourceRule = new ContainsStringRule(sourceTag);
 		IRule targetRule = new ContainsStringRule(targetTag);
 		List<CsvExportImportInformation> configurationList = getConfigurationMapping(configurations, projectAreaName,
 				sourceRule, targetRule);
 		if (configurationList == null) {
-			ExportConfigurationsByDescriptionCmd.logger.info("No valid configuration data found.");
+			logger.info("No valid configuration data found.");
 			return null;
 		}
 		return configurationList;
 	}
 
 	/**
-	 * Convert the configurations into the mapping information needed for the export
-	 * to prepare writing to CSV.
+	 * Convert the configurations into the mapping information needed for the
+	 * export to prepare writing to CSV.
 	 * 
-	 * We are only interested in streams and the streams description must contain a
-	 * tag specified by a rule.
+	 * We are only interested in streams and the streams description must
+	 * contain a tag specified by a rule.
 	 * 
 	 * @param configurations
 	 * @param projectArea
@@ -218,7 +217,7 @@ public class ConfigurationMappingUtil {
 			}
 			if (sourceRule.matches(config.getDescription())) {
 				if (source != null) {
-					ExportConfigurationsByDescriptionCmd.logger.info(
+					logger.info(
 							"Ambiguous sources found source 1 URI '{}' title '{}' source 2 URI '{}' title '{}' exiting.",
 							source.getAbout().toString(), source.getTitle(), config.getAbout().toString(),
 							config.getTitle());
@@ -232,7 +231,7 @@ public class ConfigurationMappingUtil {
 				csvExportImportInformation.setSource(source.getAbout().toString());
 			}
 		} else {
-			ExportConfigurationsByDescriptionCmd.logger.info("No match for source.");
+			logger.info("No match for source.");
 			return null;
 		}
 		return configurationList;
@@ -255,18 +254,21 @@ public class ConfigurationMappingUtil {
 			throws URISyntaxException, ResourceNotFoundException, IOException, OAuthException {
 		// Get the URL of the OSLC ChangeManagement catalog
 		String catalogUrl = helper.getCatalogUrl();
-		ExportConfigurationsCmd.logger.info("Getting Configurations");
+		logger.info("Getting Configurations");
 		String cmCatalogUrl = DngCmUtil.getCmServiceProvider(helper);
 		if (cmCatalogUrl == null) {
-			ExportConfigurationsCmd.logger.error("Unable to access the OSLC Configuration Management Provider URL");
+			logger.error("Unable to access the OSLC Configuration Management Provider URL");
 			return null;
 		}
 
 		final ProjectAreaOslcServiceProvider rmProjectAreaOslcServiceProvider = ProjectAreaOslcServiceProvider
 				.findProjectAreaOslcServiceProvider(client, catalogUrl, projectAreaName);
+		if (rmProjectAreaOslcServiceProvider == null) {
+			logger.error("Unable to find project '{}'", projectAreaName);
+			return null;
+		}
 		if (rmProjectAreaOslcServiceProvider.getProjectAreaId() == null) {
-			ExportConfigurationsCmd.logger.error("Unable to find project area service provider for '{}'",
-					projectAreaName);
+			logger.error("Unable to find project area service provider for '{}'", projectAreaName);
 			return null;
 		}
 
@@ -274,7 +276,7 @@ public class ConfigurationMappingUtil {
 		Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-		ExportConfigurationsCmd.logger.info("Filtering for Streams");
+		logger.info("Filtering for Streams");
 		List<CsvExportImportInformation> configurationList = getStreams(configurations, projectAreaName);
 		return configurationList;
 	}
@@ -315,9 +317,8 @@ public class ConfigurationMappingUtil {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean totalResult = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			ImportTypeSystemCmd.logger
-					.info("-----------------------------------------------------------------------------");
-			ImportTypeSystemCmd.logger.info("Import from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
+			logger.info("-----------------------------------------------------------------------------");
+			logger.info("Import from '{}' to '{}' ", exportImportInformation.getProjectAreaName(),
 					exportImportInformation.getSource(), exportImportInformation.getTarget());
 
 			// Get the source and the target configuration
@@ -328,24 +329,24 @@ public class ConfigurationMappingUtil {
 			Boolean operationResult = false;
 			Changeset changeSet = new Changeset(client, targetConfiguration);
 			if (changeSet.getAbout() == null) {
-				ImportTypeSystemCmd.logger.info("Failed to create change set as import target.");
+				logger.info("Failed to create change set as import target.");
 				totalResult &= operationResult;
 				continue;
 			}
-			ImportTypeSystemCmd.logger.trace("Change set'{}'", changeSet.getAbout().toString());
+			logger.trace("Change set'{}'", changeSet.getAbout().toString());
 			Configuration changeSetConfiguration = DngCmUtil.getConfiguration(client, changeSet.getAbout().toString());
 			if (changeSetConfiguration == null) {
 				totalResult &= operationResult;
-				ImportTypeSystemCmd.logger.info("Failed to create change set as import target.");
+				logger.info("Failed to create change set as import target.");
 				continue;
 			}
-			// Import the type system changes from the source stream into the change set
+			// Import the type system changes from the source stream into the
+			// change set
 			operationResult = DngCmTypeSystemImportSession.performTypeImport(client, sourceConfiguration,
 					changeSetConfiguration);
 			if (!operationResult) {
 				totalResult &= operationResult;
-				ImportTypeSystemCmd.logger.info("Failed to Import into change set '{}'.",
-						changeSetConfiguration.getAbout().toString());
+				logger.info("Failed to Import into change set '{}'.", changeSetConfiguration.getAbout().toString());
 				continue;
 			}
 			String projectAreaServiceProviderUrl = changeSetConfiguration.getServiceProvider().toString();
@@ -355,15 +356,14 @@ public class ConfigurationMappingUtil {
 
 			if (!operationResult) {
 				totalResult &= operationResult;
-				ImportTypeSystemCmd.logger.info("The delivery has failed or there were no differences to deliver!");
+				logger.info("The delivery has failed or there were no differences to deliver!");
 				Boolean deleted = DngCmUtil.discardChangeSet(client, changeSetConfiguration);
-				ImportTypeSystemCmd.logger.error(
-						"Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
+				logger.error("Failed to deliver change set '{}' to stream. '{}'. Changeset discarded: '{}'",
 						changeSetConfiguration.getAbout().toString(), targetConfiguration.getAbout().toString(),
 						deleted.toString());
 				continue;
 			}
-			ImportTypeSystemCmd.logger.trace("Result: {}", operationResult.toString());
+			logger.trace("Result: {}", operationResult.toString());
 			totalResult &= operationResult;
 		}
 		return totalResult;
@@ -385,22 +385,21 @@ public class ConfigurationMappingUtil {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException {
 		boolean delivery = true;
 		for (CsvExportImportInformation exportImportInformation : configurations) {
-			DeliverTypeSystemCmd.logger
-					.info("-----------------------------------------------------------------------------");
-			DeliverTypeSystemCmd.logger.info("Deliver from '{}' to '{}' ", exportImportInformation.getSource(),
+			logger.info("-----------------------------------------------------------------------------");
+			logger.info("Deliver from '{}' to '{}' ", exportImportInformation.getSource(),
 					exportImportInformation.getTarget());
 
 			// Get the source and the target configuration
 			Configuration sourceConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getSource());
 			Configuration targetConfiguration = DngCmUtil.getConfiguration(client, exportImportInformation.getTarget());
 			String projectAreaServiceProviderUrl = targetConfiguration.getServiceProvider().toString();
-
+			Changeset changeSet = new Changeset(client, targetConfiguration);
 			// Deliver
 			Boolean deliverresult = DngCmDeliverySession.performDelivery(client, projectAreaServiceProviderUrl,
 					sourceConfiguration, targetConfiguration);
-			DeliverTypeSystemCmd.logger.trace("Result: {}", deliverresult.toString());
+			logger.trace("Result: {}", deliverresult.toString());
 			if (!deliverresult) {
-				DeliverTypeSystemCmd.logger.info("The delivery has failed or there were no differences to deliver!");
+				logger.info("The delivery has failed or there were no differences to deliver!");
 			}
 			delivery &= deliverresult;
 		}

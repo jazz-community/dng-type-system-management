@@ -15,8 +15,6 @@
  *******************************************************************************/
 package com.ibm.requirement.typemanagement.oslc.client.automation.commands;
 
-import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.http.HttpStatus;
@@ -30,23 +28,25 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvExportImportInformation;
-import com.ibm.requirement.typemanagement.oslc.client.automation.util.CsvUtil;
-import com.ibm.requirement.typemanagement.oslc.client.dngcm.ConfigurationMappingUtil;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.InternalConfigurationArchiveApi;
 
 /**
  * Exports the streams/configurations of a project area to CSV/Excel.
  *
  */
-public class ExportConfigurationsCmd extends AbstractCommand {
+@SuppressWarnings("deprecation")
+public class ArchiveConfigurationCmd extends AbstractCommand {
 
-	public static final Logger logger = LoggerFactory.getLogger(ExportConfigurationsCmd.class);
+	public static final Logger logger = LoggerFactory.getLogger(ArchiveConfigurationCmd.class);
 
 	/**
-	 * Create new command and give it the name
+	 * Prototype to archive a component using with the internal API
+	 * 
+	 * @deprecated
 	 */
-	public ExportConfigurationsCmd() {
-		super(DngTypeSystemManagementConstants.CMD_EXPORT_CONFIGURATIONS);
+	
+	public ArchiveConfigurationCmd() {
+		super(DngTypeSystemManagementConstants.CMD_ARCHIVE_CONFIGURATIONS);
 	}
 
 	@Override
@@ -57,12 +57,14 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_ID_DESCRIPTION);
 		options.addOption(DngTypeSystemManagementConstants.PARAMETER_PASSWORD, true,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_DESCRIPTION);
-		options.addOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA, true,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_DESCRIPTION);
-		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH, true,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_DESCRIPTION);
-		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER, true,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_DESCRIPTION);
+		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI, true,
+				DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI_DESCRIPTION);
+//		options.addOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA, true,
+//				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_DESCRIPTION);
+//		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH, true,
+//				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_DESCRIPTION);
+//		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER, true,
+//				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_DESCRIPTION);
 		return options;
 	}
 
@@ -73,8 +75,10 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 		if (!(cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_URL)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_USER)
 				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PASSWORD)
-				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA)
-				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH))) {
+				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI)
+//				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA)
+//				&& cmd.hasOption(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH)
+				)) {
 			isValid = false;
 		}
 		return isValid;
@@ -117,6 +121,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
 	}
 
+
 	@Override
 	public boolean execute() {
 		boolean result = false;
@@ -125,9 +130,7 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
 		String passwd = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PASSWORD);
-		String projectAreaName = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA);
-		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
-		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
+		String configurationURI = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI);
 
 		JazzFormAuthClient client = null;
 		IExpensiveScenarioService scenarioService = null;
@@ -144,19 +147,14 @@ public class ExportConfigurationsCmd extends AbstractCommand {
 				scenarioService = ExpensiveScenarioService.createScenarioService(client, webContextUrl,
 						getCommandName());
 				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
-				logger.info("Getting Configurations");
-				List<CsvExportImportInformation> configurationList = ConfigurationMappingUtil
-						.getEditableConfigurationsForProjectArea(client, helper, projectAreaName);
-				if (configurationList != null) {
-					// export the data
-					CsvUtil csv = new CsvUtil();
-					if (null != csvDelimiter && csvDelimiter != "") {
-						csv.setSeperator(csvDelimiter.charAt(0));
-					}
+				logger.info("Archiving Configuration");
 
-					logger.info("Exporting data to file '{}'.", csvFilePath);
-					result = csv.exportConfigurationList(csvFilePath, configurationList);
-					logger.trace("End");
+				result = InternalConfigurationArchiveApi.archiveWithDescendants(client,
+						configurationURI);
+				if(result = true){
+					logger.info("Archived configuration '" + configurationURI +"'");					
+				} else {
+					logger.info("Failed archived configuration '" + configurationURI +"'");					
 				}
 			}
 		} catch (Exception e) {

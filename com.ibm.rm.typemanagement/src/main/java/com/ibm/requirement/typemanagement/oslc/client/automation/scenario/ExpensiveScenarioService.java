@@ -59,9 +59,12 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	 * scenario counter in a file or pass it as string. See option
 	 * persistStartAsFile.
 	 * 
-	 * @param teamRepository Team repository
-	 * @param publicURI      Public URI of the target CLM server
-	 * @param scenarioName   the name of the scenario
+	 * @param teamRepository
+	 *            Team repository
+	 * @param publicURI
+	 *            Public URI of the target CLM server
+	 * @param scenarioName
+	 *            the name of the scenario
 	 * @throws URISyntaxException
 	 */
 	public ExpensiveScenarioService(final JazzFormAuthClient client, final String publicURI, final String scenarioName)
@@ -114,7 +117,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 			 * 
 			 * Behavior of POST
 			 * 
-			 * 200 created. Json response body contains the URI of the change set:
+			 * 200 created. Json response body contains the URI of the change
+			 * set:
 			 * 
 			 * {"scenarioName":"MyCustomExpensiveScenario",
 			 * "scenarioInstanceId":"_Jbe94DaQEempFf7xSdsBAQ",
@@ -161,7 +165,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 				throw new Exception("Missing Scenario Start Request");
 			}
 			try {
-				// Parse as JSON to get the scenario ID and the scenario name from the file
+				// Parse as JSON to get the scenario ID and the scenario name
+				// from the file
 				JsonReaderFactory factory = Json.createReaderFactory(null);
 				JsonReader jsonReader = factory.createReader(new StringReader(startRequest));
 				JsonObject json = jsonReader.readObject();
@@ -203,7 +208,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 			 * 
 			 * Behavior of POST
 			 * 
-			 * 200 created. Json response body contains the URI of the change set:
+			 * 200 created. Json response body contains the URI of the change
+			 * set:
 			 * 
 			 * {"scenarioName":"MyCustomExpensiveScenario",
 			 * "scenarioInstanceId":"_Jbe94DaQEempFf7xSdsBAQ",

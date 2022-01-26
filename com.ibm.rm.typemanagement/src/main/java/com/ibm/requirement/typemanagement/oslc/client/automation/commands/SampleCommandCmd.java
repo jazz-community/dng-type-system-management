@@ -35,12 +35,10 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.framework.IComm
  * To finally enable this command, add this to {@link CommandFactory} in the
  * constructor like below
  * 
- * {@code 
-  
- 	private CommandFactory() {
- 		super();
-		put(new ExportConfigurationsCmd());
-		put(new ImportTypeSystemCmd()); put(new DeliverTypeSystemCmd()); put(new
+ * {@code
+ * 
+ * private CommandFactory() { super(); put(new ExportConfigurationsCmd());
+ * put(new ImportTypeSystemCmd()); put(new DeliverTypeSystemCmd()); put(new
  * SampleCommand()); } }
  * 
  * to finalize the integration.
@@ -50,8 +48,8 @@ public class SampleCommandCmd extends AbstractCommand implements ICommand {
 	public static final Logger logger = LoggerFactory.getLogger(SampleCommandCmd.class);
 
 	/**
-	 * Constructor, set the command name which will be used as option value for the
-	 * command option. The name is used in the UIs and the option parser.
+	 * Constructor, set the command name which will be used as option value for
+	 * the command option. The name is used in the UIs and the option parser.
 	 */
 	public SampleCommandCmd() {
 		super(DngTypeSystemManagementConstants.CMD_SAMPLE);
@@ -73,8 +71,8 @@ public class SampleCommandCmd extends AbstractCommand implements ICommand {
 	}
 
 	/**
-	 * Method to check if the required options/parameters required to perform the
-	 * command are available.
+	 * Method to check if the required options/parameters required to perform
+	 * the command are available.
 	 */
 	@Override
 	public boolean checkParameters(CommandLine cmd) {
