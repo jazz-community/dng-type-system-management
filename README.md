@@ -1,6 +1,6 @@
 # dng-type-system-management
 
-Type System Manager V1.1
+Type System Manager V1.3
 
 Command line tool to support managing IBM Rational DOORS Next Generation Type Systems.
 
