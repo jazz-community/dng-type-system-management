@@ -142,4 +142,6 @@ public interface DngTypeSystemManagementConstants {
 	public static final String PARAMETER_CONFIGURATION_URI = "configurationURI";
 
 	public static final String PARAMETER_CONFIGURATION_URI_DESCRIPTION = "The URI for a configuration.";
+
+	public static final Object PARAMETER_CONFIGURATION_URI_PROTOTYPE = "";
 }

@@ -88,8 +88,8 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
 		logger.info(
-				"\n\tFinds all editable configurations of a project area and exports the information into a CSV file.");
-		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+				"\n\tArchives an editable configuration.");
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -97,28 +97,20 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 				DngTypeSystemManagementConstants.PARAMETER_USER_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_PROTOTYPE,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_PROTOTYPE,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_PROTOTYPE,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
-		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {} -{} {}",
+				DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI);
+		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{}",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL, DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_USER,
 				DngTypeSystemManagementConstants.PARAMETER_USER_ID_EXAMPLE,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD,
 				DngTypeSystemManagementConstants.PARAMETER_PASSWORD_EXAMPLE,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA,
-				DngTypeSystemManagementConstants.PARAMETER_PROJECT_AREA_EXAMPLE,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_EXAMPLE);
+				DngTypeSystemManagementConstants.PARAMETER_CONFIGURATION_URI);
 
-		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
-		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
+//		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
+//				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
+//		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
+//				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
 	}
 
 
