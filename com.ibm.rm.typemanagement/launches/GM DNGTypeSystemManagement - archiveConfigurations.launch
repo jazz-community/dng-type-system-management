@@ -13,7 +13,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemManagement"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.rm.typemanagement"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command deliverTypeSystem -url https://elm.example.com:9443/rm -user ralph -password ralph -csvfile &quot;c:\Temp\TypeSystemDelivery.csv&quot;"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-command archiveConfigurations -url https://elm.example.com:9443/rm -user ralph -password ralph -csvfile &quot;C:\aaTemp\GM\test3.csv&quot; -csvDelimiter &quot;;&quot;"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.rm.typemanagement"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 </launchConfiguration>

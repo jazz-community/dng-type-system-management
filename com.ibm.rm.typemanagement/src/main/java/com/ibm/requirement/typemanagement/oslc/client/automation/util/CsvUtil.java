@@ -168,4 +168,29 @@ public class CsvUtil {
 		return configs;
 	}
 
+	public List<CsvConfigurtionArchiveInformation> readConfigurationsForArchival(String filePath) {
+		List<CsvConfigurtionArchiveInformation> configs = null;
+
+		try {
+			FileReader reader = new FileReader(filePath);
+			CsvToBean<CsvConfigurtionArchiveInformation> csvToBean = new CsvToBeanBuilder<CsvConfigurtionArchiveInformation>(reader)
+					.withType(CsvConfigurtionArchiveInformation.class).withSeparator(getSeperator())
+					.withQuoteChar(getQuoteChar()).withEscapeChar(getEscapeChar()).build();
+			configs = new ArrayList<CsvConfigurtionArchiveInformation>();
+			for (CsvConfigurtionArchiveInformation configurationToArchive : csvToBean) {
+				configs.add(configurationToArchive);
+			}
+			reader.close();
+		} catch (FileNotFoundException e) {
+			logger.error("File not found '{}'", filePath);
+			// e.printStackTrace();
+			// throw(e);
+		} catch (IOException e) {
+			logger.error("IOException " + e.getMessage());
+			// e.printStackTrace();
+			// throw(e);
+		}
+		return configs;
+	}
+
 }

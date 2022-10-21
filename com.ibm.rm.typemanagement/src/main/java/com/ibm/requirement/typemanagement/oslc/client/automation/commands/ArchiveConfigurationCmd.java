@@ -28,6 +28,7 @@ import com.ibm.requirement.typemanagement.oslc.client.automation.DngTypeSystemMa
 import com.ibm.requirement.typemanagement.oslc.client.automation.framework.AbstractCommand;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.ExpensiveScenarioService;
 import com.ibm.requirement.typemanagement.oslc.client.automation.scenario.IExpensiveScenarioService;
+import com.ibm.requirement.typemanagement.oslc.client.dngcm.CallStatus;
 import com.ibm.requirement.typemanagement.oslc.client.dngcm.InternalConfigurationArchiveApi;
 
 /**
@@ -46,7 +47,7 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 	 */
 	
 	public ArchiveConfigurationCmd() {
-		super(DngTypeSystemManagementConstants.CMD_ARCHIVE_CONFIGURATIONS);
+		super(DngTypeSystemManagementConstants.CMD_ARCHIVE_CONFIGURATION);
 	}
 
 	@Override
@@ -141,9 +142,9 @@ public class ArchiveConfigurationCmd extends AbstractCommand {
 				scenarioInstance = ExpensiveScenarioService.startScenario(scenarioService);
 				logger.info("Archiving Configuration");
 
-				result = InternalConfigurationArchiveApi.archiveWithDescendants(client,
-						configurationURI);
-				if(result = true){
+				CallStatus status = InternalConfigurationArchiveApi.archiveWithDescendants(client,
+						configurationURI, 0);
+				if(status.getCallResult() == true){
 					logger.info("Archived configuration '" + configurationURI +"'");					
 				} else {
 					logger.info("Failed archived configuration '" + configurationURI +"'");					

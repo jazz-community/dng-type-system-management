@@ -21,7 +21,7 @@ package com.ibm.requirement.typemanagement.oslc.client.automation;
  */
 public interface DngTypeSystemManagementConstants {
 
-	public static final String VERSIONINFO = "1.3";
+	public static final String VERSIONINFO = "1.4";
 
 	// Commands and parameters
 	public static final String PARAMETER_COMMAND = "command";
@@ -130,8 +130,9 @@ public interface DngTypeSystemManagementConstants {
 	public static final String CM_SERVICE_PROVIDER_PROPERTY_NAME = "cmServiceProviders";
 	public static final String PROCESS_NAMESPACE_PROPERTY_PROJECT_AREA = "projectArea";
 
+	public static final String CMD_ARCHIVE_CONFIGURATION = "archiveConfiguration";
 	public static final String CMD_ARCHIVE_CONFIGURATIONS = "archiveConfigurations";
-
+	
 	public static final String CMD_ANALYZE_CONFIGURATIONS = "analyzeConfigurations";
 
 	public static final String PARAMETER_PROCESS_ITEMS_LIMIT = "processItemsLimit";

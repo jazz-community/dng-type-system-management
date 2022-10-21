@@ -276,10 +276,31 @@ public class ConfigurationMappingUtil {
 		Collection<Component> components = DngCmUtil.getComponentsForProjectArea(client, cmCatalogUrl,
 				rmProjectAreaOslcServiceProvider.getProjectAreaId());
 		Collection<Configuration> configurations = DngCmUtil.getConfigurationsForComponents(client, components);
-		logger.info("Filtering for Streams");
-		List<CsvExportImportInformation> configurationList = getStreams(configurations, projectAreaName);
+// TODO: filter for Streams		
+//		logger.info("Filtering for Streams");
+//		List<CsvExportImportInformation> configurationList = getStreams(configurations, projectAreaName);
+		List<CsvExportImportInformation> configurationList = getConfigurations(configurations, projectAreaName);
 		return configurationList;
 	}
+	
+	/**
+	 * Convert the configurations into the information needed for the export to
+	 * prepare writing to CSV.
+	 * 
+	 * @param configurations
+	 * @param projectArea
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	private static List<CsvExportImportInformation> getConfigurations(Collection<Configuration> configurations,
+			String projectArea) throws URISyntaxException {
+		List<CsvExportImportInformation> configurationList = new ArrayList<CsvExportImportInformation>();
+		for (Configuration target : configurations) {
+				configurationList.add(new CsvExportImportInformation(null, target, projectArea));
+		}
+		return configurationList;
+	}
+
 
 	/**
 	 * Convert the configurations into the information needed for the export to
