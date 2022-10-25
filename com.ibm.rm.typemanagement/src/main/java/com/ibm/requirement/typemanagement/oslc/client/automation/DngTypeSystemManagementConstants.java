@@ -144,5 +144,12 @@ public interface DngTypeSystemManagementConstants {
 
 	public static final String PARAMETER_CONFIGURATION_URI_DESCRIPTION = "The URI for a configuration.";
 
-	public static final Object PARAMETER_CONFIGURATION_URI_PROTOTYPE = "";
+	public static final String PARAMETER_CONFIGURATION_URI_PROTOTYPE = "";
+
+	
+	public static final String PARAMETER_SIMULATION = "simulation";
+	public static final String PARAMETER_SIMULATION_PROTOTYPE = "<simulation>";
+	public static final String PARAMETER_SIMULATION_EXAMPLE = "true";
+
+	public static final String PARAMETER_SIMULATION_DESCRIPTION = "Runs in simulation mode and does not update any objects";
 }

@@ -60,6 +60,7 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 	char quoteChar = CSVWriter.DEFAULT_QUOTE_CHARACTER;
 	char escapeChar = CSVWriter.NO_ESCAPE_CHARACTER;
 	String lineEnd = CSVWriter.DEFAULT_LINE_END;
+	Integer archiveCount = 0;
 
 	public void setCsvInfo() {
 
@@ -123,6 +124,8 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_DESCRIPTION);
 		options.addOption(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER, true,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_DESCRIPTION);
+		options.addOption(DngTypeSystemManagementConstants.PARAMETER_SIMULATION, true,
+				DngTypeSystemManagementConstants.PARAMETER_SIMULATION_DESCRIPTION);
 		return options;
 	}
 
@@ -143,7 +146,7 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 	public void printSyntax() {
 		logger.info("{}", getCommandName());
 		logger.info("\n\tReads a CSV file with a list of configuration and archives the configurations from the list.");
-		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ]",
+		logger.info("\n\tSyntax : -{} {} -{} {} -{} {} -{} {} -{} {} [ -{} {} ] [ -{} {} ]",
 				DngTypeSystemManagementConstants.PARAMETER_COMMAND, getCommandName(),
 				DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_PROTOTYPE,
@@ -154,7 +157,9 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH_PROTOTYPE,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
-				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
+				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE,
+				DngTypeSystemManagementConstants.PARAMETER_SIMULATION,
+				DngTypeSystemManagementConstants.PARAMETER_SIMULATION_PROTOTYPE);
 		logger.info("\tExample: -{} {} -{} {} -{} {} -{} {} -{} {}", DngTypeSystemManagementConstants.PARAMETER_COMMAND,
 				getCommandName(), DngTypeSystemManagementConstants.PARAMETER_URL,
 				DngTypeSystemManagementConstants.PARAMETER_URL_EXAMPLE, DngTypeSystemManagementConstants.PARAMETER_USER,
@@ -168,20 +173,26 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_PROTOTYPE);
 		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER,
 				DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER_EXAMPLE);
+		logger.info("\tOptional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_SIMULATION,
+				DngTypeSystemManagementConstants.PARAMETER_SIMULATION_PROTOTYPE);
+		logger.info("\tExample optional parameter: -{} {}", DngTypeSystemManagementConstants.PARAMETER_SIMULATION,
+				DngTypeSystemManagementConstants.PARAMETER_SIMULATION_EXAMPLE);
 	}
 
 	@Override
 	public boolean execute() {
 
 		boolean result = false;
-
+		boolean doSimulation = false;
 		// Get all the option values
 		String webContextUrl = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_URL);
 		String user = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_USER);
 		String passwd = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_PASSWORD);
 		String csvFilePath = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_FILE_PATH);
 		String csvDelimiter = getCmd().getOptionValue(DngTypeSystemManagementConstants.PARAMETER_CSV_DELIMITER);
+		doSimulation = getCmd().hasOption(DngTypeSystemManagementConstants.PARAMETER_SIMULATION);
 
+		
 		JazzFormAuthClient client = null;
 		IExpensiveScenarioService scenarioService = null;
 		String scenarioInstance = null;
@@ -193,10 +204,6 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 			}
 
 			logger.info(TimeStampUtil.getTimestamp() + " Using csv file '{}'", csvFilePath);
-//			List<CsvConfigurtionArchiveInformation> configurations = csv.readConfigurationsForArchival(csvFilePath);
-//			if (configurations == null) {
-//				return result;
-//			}
 			// Login
 			JazzRootServicesHelper helper = new JazzRootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2);
 			logger.trace("Login");
@@ -215,7 +222,8 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 					return result;
 				}
 
-				result = archiveConfigurations(client, csvFilePath);
+				result = archiveConfigurations(client, csvFilePath, doSimulation);
+				logger.info(TimeStampUtil.getTimestamp() + " Archived configurations: {}", archiveCount.toString());
 				logger.trace("End");
 			}
 		} catch (RootServicesException re) {
@@ -229,8 +237,14 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 		return result;
 	}
 
-	public boolean archiveConfigurations(JazzFormAuthClient client, String filePath) {
+	public boolean archiveConfigurations(JazzFormAuthClient client, String filePath, boolean doSimulation) {
+		int suppressArchive = 0;
+		if(doSimulation) {
+			suppressArchive = 3;
+		}
 		int count = 0;
+		// set the archive count to 0.
+		archiveCount=0;
 		boolean result = true;
 		try {
 			FileReader reader = new FileReader(filePath);
@@ -239,10 +253,8 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 					.withQuoteChar(getQuoteChar()).withEscapeChar(getEscapeChar()).build();
 			for (CsvConfigurtionArchiveInformation configurationToArchive : csvToBean) {
 				count++;
-				// Enable Archiving
-				result &= archiveConfiguration(client, configurationToArchive, count, 0, 0, 0);
-				// For testing purposes, archiving is suppressed
-				//result &= archiveConfiguration(client, configurationToArchive, count, 0, 0, 3);
+				result &= archiveConfiguration(client, configurationToArchive, count, 0, 0, suppressArchive);
+
 				// Runs multiple tests against the same configuration
 				//result &= archiveConfigurationTest(client, configurationToArchive, count, 0, 0, 0);
 			}
@@ -254,6 +266,7 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 		}
 		return result;
 	}
+	
 	public boolean archiveConfigurationTest(JazzFormAuthClient client, CsvConfigurtionArchiveInformation configuration,
 			int count, int isArchivedError, int hasDependentError, int doArchiveError) {
 		boolean result = true;
@@ -287,31 +300,34 @@ public class ArchiveConfigurationsCmd extends AbstractCommand implements IComman
 					.concat(isArchived.getMessage());
 			result = false;
 		} else if (isArchived.getCallResult()) {
-			archived = archived.concat(" is already archived");
+			archived = archived.concat("\t is already archived");
 			result = true;
 		} else {
-			archived = archived.concat(" is not archived");
+			archived = archived.concat("\t is not archived");
 
 			// Step 2, check if the configuration can be archived
 			CallStatus hasDependentConfigs = DependentConfigurationsApi.hasNoDependentConfiguration(client, conf, hasDependentError);
 			if (hasDependentConfigs.callFailed()) {
-				dependentErrorMessage = dependentErrorMessage.concat(" Dependent configuration call failed - ")
+				dependentErrorMessage = dependentErrorMessage.concat("\t Dependent configuration call failed - ")
 						.concat(isArchived.getMessage());
 				result = false;
 			} else if (hasDependentConfigs.getCallResult()) {
-				archived = archived.concat(" has no dependencies ");		
+				archived = archived.concat("\t has no dependencies ");		
 				CallStatus archive = InternalConfigurationArchiveApi.archiveWithDescendants(client, conf, doArchiveError);
 				if (archive.callFailed()) {
-					archiveErrorMessage = archiveErrorMessage.concat(" Archiving call failed - ")
+					archiveErrorMessage = archiveErrorMessage.concat("\t Archiving call failed - ")
 							.concat(archive.getMessage());
 					result = false;
 				} else {
 					result = true;
-					archived = archived.concat(" Was archived ");
+					archived = archived.concat("\t was archived ");
+					archiveCount++;
 				}
 			} else {
 				archived = archived
-						.concat(" has dependencies " + hasDependentConfigs.getNoResults() + " can not be archived");
+						.concat(""
+								+ ""
+								+ "\t has dependencies " + hasDependentConfigs.getNoResults() + "\t can not be archived");
 				result = true;
 			}
 		}
